@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://brrycvyq1mk6x"]
+
+[ext_resource type="Script" path="res://game.gd" id="1_wy8fb"]
+[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://snake_tileset.tres" id="2_rbfkp"]
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("grid")]
+script = ExtResource("1_wy8fb")
+grid = NodePath("Grid")
+
+[node name="Grid" type="TileMap" parent="."]
+tile_set = ExtResource("2_rbfkp")
+format = 2
+layer_0/name = "Snake"
+layer_0/tile_data = PackedInt32Array(458760, 1, 0, 458759, 262145, 0, 458758, 262145, 0, 458757, 262145, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -1
+offset_right = 128.0
+offset_bottom = 128.0
+color = Color(0, 0, 0, 1)

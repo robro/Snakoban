@@ -1,0 +1,28 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://rq5otf577nnm"]
+
+[ext_resource type="Texture2D" uid="uid://cdud7wqnwj3hb" path="res://snake_atlas.tres" id="1_hotpd"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0sq50"]
+resource_name = "snake"
+texture = ExtResource("1_hotpd")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+6:1/0 = 0
+4:0/0 = 0
+5:1/0 = 0
+4:1/0 = 0
+3:1/0 = 0
+2:1/0 = 0
+1:1/0 = 0
+0:1/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+7:1/0 = 0
+
+[resource]
+tile_size = Vector2i(8, 8)
+sources/1 = SubResource("TileSetAtlasSource_0sq50")
