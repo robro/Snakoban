@@ -13,6 +13,9 @@ var snake: Array[Vector2] = [
 	Vector2(0, 0),
 ]
 var tail_pos := snake[-1]
+var facing : Vector2:
+	get:
+		return Vector2.from_angle(angle(snake[1], snake[0])).round()
 
 
 func _ready() -> void:
@@ -21,19 +24,21 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	var facing = Vector2.from_angle(angle(snake[1], snake[0])).round()
-
 	if event.is_action_pressed("up") and facing != Vector2.DOWN:
-		move(Vector2.UP)
+		try_move(Vector2.UP)
 	elif event.is_action_pressed("down") and facing != Vector2.UP:
-		move(Vector2.DOWN)
+		try_move(Vector2.DOWN)
 	elif event.is_action_pressed("left") and facing != Vector2.RIGHT:
-		move(Vector2.LEFT)
+		try_move(Vector2.LEFT)
 	elif event.is_action_pressed("right") and facing != Vector2.LEFT:
-		move(Vector2.RIGHT)
+		try_move(Vector2.RIGHT)
 
 
-func move(offset: Vector2) -> void:
+func try_move(offset: Vector2) -> void:
+	for pos in snake:
+		if pos == snake[0] + offset:
+			return
+
 	tail_pos = snake.pop_back()
 	snake.insert(0, snake[0] + offset)
 	queue_redraw()

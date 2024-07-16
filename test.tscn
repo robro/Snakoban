@@ -13,7 +13,7 @@ format = 2
 layer_0/name = "Snake"
 layer_0/tile_data = PackedInt32Array(458760, 1, 0, 458759, 262145, 0, 458758, 262145, 0, 458757, 262145, 1)
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="."]
 z_index = -1
 offset_right = 128.0
 offset_bottom = 128.0
