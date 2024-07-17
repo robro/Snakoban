@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5bnn25b2ur1x"
-path="res://.godot/imported/snake.png-b391a99cb1b065a935aab82a7b755f80.ctex"
+uid="uid://d28oyd84keeno"
+path="res://.godot/imported/food.png-963755ff54edddfe9bd0e6c9996cab64.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://aseprite/snake.png"
-dest_files=["res://.godot/imported/snake.png-b391a99cb1b065a935aab82a7b755f80.ctex"]
+source_file="res://object/food/food.png"
+dest_files=["res://.godot/imported/food.png-963755ff54edddfe9bd0e6c9996cab64.ctex"]
 
 [params]
 
@@ -31,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pvugeknkr8jq"
-path="res://.godot/imported/walls.png-e2ee6ace2bb6b3ea6a11d2ae9604d313.ctex"
+uid="uid://5bnn25b2ur1x"
+path="res://.godot/imported/snake.png-9f15d707e1d4ed066aafd8b356a55f42.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://aseprite/walls.png"
-dest_files=["res://.godot/imported/walls.png-e2ee6ace2bb6b3ea6a11d2ae9604d313.ctex"]
+source_file="res://object/snake/snake.png"
+dest_files=["res://.godot/imported/snake.png-9f15d707e1d4ed066aafd8b356a55f42.ctex"]
 
 [params]
 
@@ -31,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

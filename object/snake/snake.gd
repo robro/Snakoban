@@ -43,6 +43,10 @@ func move_to(point: Vector2i) -> void:
 	points.insert(0, point)
 
 
+func grow() -> void:
+	points.append(tail)
+
+
 func get_tile(i: int) -> Vector2i:
 	var start_tile := Vector2i.ZERO
 	var tile_offset := Vector2i.ZERO
