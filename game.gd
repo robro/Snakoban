@@ -44,13 +44,13 @@ func _on_snake_want_move_to(point: Vector2i, direction: Vector2i) -> void:
 		for i in box_points.size():
 			if point == box_points[i]:
 				var box_point := point + direction
-				if (grid.get_cell_tile_data(Layer.STATIC, box_point) == null and
-					not box_point in snake.points and
-					not box_point in box_points
+				if (box_point in grid.get_used_cells(Layer.STATIC) or
+					box_point in snake.points or
+					box_point in box_points
 				):
-					box_points[i] = box_point
-				else:
 					return
+				else:
+					box_points[i] = box_point
 
 	snake.move_to(point)
 	queue_redraw()
