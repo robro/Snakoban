@@ -61,6 +61,7 @@ func try_move(direction: Vector2i) -> void:
 			var try_box_pos := boxes[i] + direction
 			if (grid.get_cell_tile_data(Layer.SNAKE, try_box_pos) == null and
 				grid.get_cell_tile_data(Layer.MOVEABLE, try_box_pos) == null and
+				grid.get_cell_tile_data(Layer.LASER, try_box_pos) == null and
 				grid.get_cell_tile_data(Layer.WALLS, try_box_pos) == null
 			):
 				boxes[i] += direction
@@ -94,7 +95,7 @@ func _draw() -> void:
 			grid.set_cell(Layer.DEATH, try_pos, 2, Vector2i(0, 2))
 			try_pos += Vector2i(direction)
 
-	for death_pos in grid.get_used_cells_by_id(Layer.DEATH):
+	for death_pos in grid.get_used_cells(Layer.DEATH):
 		for snake_pos in snake:
 			if snake_pos == death_pos:
 				get_tree().reload_current_scene()
