@@ -52,9 +52,8 @@ func try_move(direction: Vector2i) -> void:
 	if grid.get_cell_tile_data(Layer.WALLS, try_pos) != null:
 		return
 
-	for part_pos in snake:
-		if try_pos == part_pos:
-			return
+	if try_pos in snake:
+		return
 
 	for i in boxes.size():
 		if try_pos == boxes[i]:
@@ -96,10 +95,9 @@ func _draw() -> void:
 			try_pos += Vector2i(direction)
 
 	for death_pos in grid.get_used_cells(Layer.DEATH):
-		for snake_pos in snake:
-			if snake_pos == death_pos:
-				get_tree().reload_current_scene()
-				return
+		if death_pos in snake:
+			get_tree().reload_current_scene()
+			return
 
 
 func get_snake_tile(i: int) -> Vector2i:
