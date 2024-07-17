@@ -1,8 +1,6 @@
 extends Node2D
 
 @export var grid : TileMap
-@export var snake_size := 5
-@export var start_facing := Direction.RIGHT
 
 var snake : Array[Vector2i]
 var boxes : Array[Vector2i]
@@ -12,8 +10,9 @@ var facing : Vector2i:
 		return Vector2.from_angle(angle(snake[1], snake[0])).round()
 
 enum Layer {
-	OBJECTS,
+	MOVEABLE,
 	WALLS,
+	GOAL,
 }
 
 enum Direction {
@@ -33,12 +32,9 @@ const offsets = {
 
 func _ready() -> void:
 	assert(grid is TileMap)
-	assert(snake_size > 1)
 
-	for i in snake_size:
-		snake.append(grid.get_used_cells_by_id(Layer.OBJECTS, 1)[0] + offsets[start_facing] * -i)
-
-	boxes.append_array(grid.get_used_cells_by_id(Layer.OBJECTS, 2))
+	snake.append_array(grid.get_used_cells_by_id(Layer.MOVEABLE, 1))
+	boxes.append_array(grid.get_used_cells_by_id(Layer.MOVEABLE, 2))
 
 
 func _input(event: InputEvent) -> void:
@@ -50,32 +46,45 @@ func _input(event: InputEvent) -> void:
 		try_move(Vector2i.LEFT)
 	elif event.is_action_pressed("right") and facing != Vector2i.LEFT:
 		try_move(Vector2i.RIGHT)
+	elif event.is_action_pressed("reset"):
+		get_tree().reload_current_scene()
 
 
 func try_move(direction: Vector2i) -> void:
-	for pos in snake:
-		if snake[0] + direction == pos:
+	var try_pos := snake[0] + direction
+
+	if grid.get_cell_tile_data(Layer.GOAL, try_pos) != null:
+		get_tree().reload_current_scene()
+
+	if grid.get_cell_tile_data(Layer.WALLS, try_pos) != null:
+		return
+
+	for part_pos in snake:
+		if try_pos == part_pos:
 			return
 
 	for i in boxes.size():
-		if snake[0] + direction == boxes[i]:
-			if (grid.get_cell_tile_data(Layer.OBJECTS, boxes[i] + direction) == null):
+		if try_pos == boxes[i]:
+			var try_box_pos := boxes[i] + direction
+			if (grid.get_cell_tile_data(Layer.MOVEABLE, try_box_pos) == null and
+				grid.get_cell_tile_data(Layer.WALLS, try_box_pos) == null
+			):
 				boxes[i] += direction
 			else:
 				return
 
 	tail_pos = snake.pop_back()
-	snake.insert(0, snake[0] + direction)
+	snake.insert(0, try_pos)
 	queue_redraw()
 
 
 func _draw() -> void:
-	grid.clear()
+	grid.clear_layer(Layer.MOVEABLE)
 	for i in snake.size():
-		grid.set_cell(Layer.OBJECTS, snake[i], 1, get_snake_tile(i))
+		grid.set_cell(Layer.MOVEABLE, snake[i], 1, get_snake_tile(i))
 
 	for i in boxes.size():
-		grid.set_cell(Layer.OBJECTS, boxes[i], 2, Vector2i.ZERO)
+		grid.set_cell(Layer.MOVEABLE, boxes[i], 2, Vector2i.ZERO)
 
 
 func get_snake_tile(i: int) -> Vector2i:
