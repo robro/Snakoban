@@ -5,47 +5,39 @@ extends Node2D
 var snake : Array[Vector2i]
 var boxes : Array[Vector2i]
 var tail_pos : Vector2i
-var facing : Vector2i:
-	get:
-		return Vector2.from_angle(angle(snake[1], snake[0])).round()
 
 enum Layer {
+	SNAKE,
 	MOVEABLE,
 	WALLS,
+	LASER,
+	DEATH,
 	GOAL,
-}
-
-enum Direction {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-}
-
-const offsets = {
-	Direction.UP: Vector2i.UP,
-	Direction.DOWN: Vector2i.DOWN,
-	Direction.LEFT: Vector2i.LEFT,
-	Direction.RIGHT: Vector2i.RIGHT,
 }
 
 
 func _ready() -> void:
 	assert(grid is TileMap)
 
-	snake.append_array(grid.get_used_cells_by_id(Layer.MOVEABLE, 1))
-	boxes.append_array(grid.get_used_cells_by_id(Layer.MOVEABLE, 2))
+	snake.append_array(grid.get_used_cells(Layer.SNAKE))
+	boxes.append_array(grid.get_used_cells(Layer.MOVEABLE))
 
 
 func _input(event: InputEvent) -> void:
+	var facing := Vector2i(Vector2.from_angle(angle(snake[1], snake[0])))
+
 	if event.is_action_pressed("up") and facing != Vector2i.DOWN:
 		try_move(Vector2i.UP)
+
 	elif event.is_action_pressed("down") and facing != Vector2i.UP:
 		try_move(Vector2i.DOWN)
+
 	elif event.is_action_pressed("left") and facing != Vector2i.RIGHT:
 		try_move(Vector2i.LEFT)
+
 	elif event.is_action_pressed("right") and facing != Vector2i.LEFT:
 		try_move(Vector2i.RIGHT)
+
 	elif event.is_action_pressed("reset"):
 		get_tree().reload_current_scene()
 
@@ -55,6 +47,7 @@ func try_move(direction: Vector2i) -> void:
 
 	if grid.get_cell_tile_data(Layer.GOAL, try_pos) != null:
 		get_tree().reload_current_scene()
+		return
 
 	if grid.get_cell_tile_data(Layer.WALLS, try_pos) != null:
 		return
@@ -66,7 +59,8 @@ func try_move(direction: Vector2i) -> void:
 	for i in boxes.size():
 		if try_pos == boxes[i]:
 			var try_box_pos := boxes[i] + direction
-			if (grid.get_cell_tile_data(Layer.MOVEABLE, try_box_pos) == null and
+			if (grid.get_cell_tile_data(Layer.SNAKE, try_box_pos) == null and
+				grid.get_cell_tile_data(Layer.MOVEABLE, try_box_pos) == null and
 				grid.get_cell_tile_data(Layer.WALLS, try_box_pos) == null
 			):
 				boxes[i] += direction
@@ -79,12 +73,32 @@ func try_move(direction: Vector2i) -> void:
 
 
 func _draw() -> void:
+	grid.clear_layer(Layer.SNAKE)
 	grid.clear_layer(Layer.MOVEABLE)
+	grid.clear_layer(Layer.DEATH)
+
 	for i in snake.size():
-		grid.set_cell(Layer.MOVEABLE, snake[i], 1, get_snake_tile(i))
+		grid.set_cell(Layer.SNAKE, snake[i], 1, get_snake_tile(i))
 
 	for i in boxes.size():
 		grid.set_cell(Layer.MOVEABLE, boxes[i], 2, Vector2i.ZERO)
+
+	for pos in grid.get_used_cells(Layer.LASER):
+		var direction := Vector2.from_angle(
+			grid.get_cell_atlas_coords(Layer.LASER, pos).x * (PI / 2)
+		)
+		var try_pos := pos + Vector2i(direction)
+		while (grid.get_cell_tile_data(Layer.WALLS, try_pos) == null and
+			grid.get_cell_tile_data(Layer.MOVEABLE, try_pos) == null
+		):
+			grid.set_cell(Layer.DEATH, try_pos, 2, Vector2i(0, 2))
+			try_pos += Vector2i(direction)
+
+	for death_pos in grid.get_used_cells_by_id(Layer.DEATH):
+		for snake_pos in snake:
+			if snake_pos == death_pos:
+				get_tree().reload_current_scene()
+				return
 
 
 func get_snake_tile(i: int) -> Vector2i:
