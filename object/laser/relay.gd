@@ -1,8 +1,9 @@
-class_name Laser
+class_name Relay
 extends Node
 
 var point: Vector2i
-var active: bool
+var id: int
+var active: bool = false
 var atlas_x: int
 var atlas_coord: Vector2i:
     get:
@@ -12,7 +13,7 @@ var direction: Vector2i:
         return Vector2i(Vector2.from_angle(atlas_x * (PI / 2)))
 
 
-func _init(_point: Vector2i, _atlas_coord: Vector2i) -> void:
+func _init(_point: Vector2i, _id: int, _atlas_x: int) -> void:
     point = _point
-    atlas_x = _atlas_coord.x
-    active = true if _atlas_coord.y == 0 else false
+    id = _id
+    atlas_x = _atlas_x

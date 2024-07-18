@@ -5,8 +5,7 @@ extends Node2D
 
 var snake: Snake
 var snake_color: Color
-var boxes: Array[Box]
-var lasers: Array[Laser]
+var moveables: Array[Node]
 var foods: Array[Food]
 var flash_timer := Timer.new()
 var reset_timer := Timer.new()
@@ -30,8 +29,6 @@ enum Id {
 
 
 func _ready() -> void:
-	assert(grid is TileMap)
-
 	# Snake tiles are sorted by the order they were drawn in
 	# so draw them from head to tail
 	snake_color = grid.get_layer_modulate(Layer.SNAKE)
@@ -40,10 +37,16 @@ func _ready() -> void:
 	add_child(snake)
 
 	for point in grid.get_used_cells_by_id(Layer.DYNAMIC, Id.BOX):
-		boxes.append(Box.new(point, grid.get_cell_atlas_coords(Layer.DYNAMIC, point)))
+		moveables.append(Box.new(point, Id.BOX, grid.get_cell_atlas_coords(Layer.DYNAMIC, point)))
 
 	for point in grid.get_used_cells_by_id(Layer.DYNAMIC, Id.LASER):
-		lasers.append(Laser.new(point, grid.get_cell_atlas_coords(Layer.DYNAMIC, point)))
+		var atlas_coord := grid.get_cell_atlas_coords(Layer.DYNAMIC, point)
+		if atlas_coord.y == 0:
+			moveables.append(Emitter.new(point, Id.LASER, atlas_coord.x))
+		elif atlas_coord.y == 1:
+			moveables.append(Relay.new(point, Id.LASER, atlas_coord.x))
+		else:
+			assert(false, "invalid atlas coordinate")
 
 	for point in grid.get_used_cells_by_id(Layer.DYNAMIC, Id.FOOD):
 		foods.append(Food.new(point, grid.get_cell_atlas_coords(Layer.DYNAMIC, point)))
@@ -64,27 +67,17 @@ func _on_snake_want_move_to(point: Vector2i, direction: Vector2i) -> void:
 				state_chart.send_event("won")
 			break
 
-	for i in boxes.size():
-		if point == boxes[i].point:
-			var box_move_point := point + direction
-			if (box_move_point in grid.get_used_cells(Layer.DYNAMIC) or
-				box_move_point in grid.get_used_cells(Layer.STATIC) or
-				box_move_point in grid.get_used_cells(Layer.SNAKE)
+	for i in moveables.size():
+		if point == moveables[i].point:
+			var move_point := point + direction
+			if (move_point in grid.get_used_cells(Layer.DYNAMIC) or
+				move_point in grid.get_used_cells(Layer.STATIC) or
+				move_point in grid.get_used_cells(Layer.SNAKE)
 			):
 				return
 			else:
-				boxes[i].point = box_move_point
-
-	for i in lasers.size():
-		if point == lasers[i].point:
-			var laser_move_point := point + direction
-			if (laser_move_point in grid.get_used_cells(Layer.DYNAMIC) or
-				laser_move_point in grid.get_used_cells(Layer.STATIC) or
-				laser_move_point in grid.get_used_cells(Layer.SNAKE)
-			):
-				return
-			else:
-				lasers[i].point = laser_move_point
+				moveables[i].point = move_point
+			break
 
 	snake.move_to(point)
 	queue_redraw()
@@ -107,39 +100,41 @@ func _draw() -> void:
 	for food in foods:
 		grid.set_cell(Layer.DYNAMIC, food.point, Id.FOOD, food.atlas_coord)
 
-	for box in boxes:
-		grid.set_cell(Layer.DYNAMIC, box.point, Id.BOX, box.atlas_coord)
+	for relay: Relay in moveables.filter(func(n: Node) -> bool: return n is Relay):
+		relay.active = false
 
-	for laser in lasers:
-		grid.set_cell(Layer.DYNAMIC, laser.point, Id.LASER, laser.atlas_coord)
+	for emitter: Emitter in moveables.filter(func(n: Node) -> bool: return n is Emitter):
+		emit_beam(emitter.point, emitter.direction)
 
-	var lasers_to_emit: Array[Laser] = lasers.filter(func(l: Laser) -> bool: return l.active)
-	var inactive_lasers: Array[Laser] = lasers.filter(func(l: Laser) -> bool: return not l.active)
+	for moveable in moveables:
+		grid.set_cell(Layer.DYNAMIC, moveable.point, moveable.id, moveable.atlas_coord)
 
-	while lasers_to_emit.size() > 0:
-		var laser: Laser = lasers_to_emit.pop_front()
-		grid.set_cell(Layer.DYNAMIC, laser.point, Id.LASER, Vector2i(laser.atlas_x, 0))
-		var beam_point := laser.point + laser.direction
 
-		while (grid.get_cell_tile_data(Layer.STATIC, beam_point) == null):
-			if beam_point in snake.points:
-				state_chart.send_event("lost")
+func emit_beam(point: Vector2i, direction: Vector2i) -> void:
+	var beam_point := point + direction
 
-			if beam_point in grid.get_used_cells(Layer.DYNAMIC):
-				break
+	while (grid.get_cell_tile_data(Layer.STATIC, beam_point) == null):
+		if beam_point in snake.points:
+			state_chart.send_event("lost")
 
-			grid.set_cell(
-				Layer.H_BEAM if is_horizontal(laser.direction) else Layer.V_BEAM,
-				beam_point,
-				Id.BEAM,
-				Vector2i(0, 0) if is_horizontal(laser.direction) else Vector2i(2, 0)
-			)
-			beam_point += laser.direction
+		for moveable in moveables:
+			if beam_point == moveable.point:
+				if moveable is Relay:
+					moveable.active = true
+					if Vector2(direction).dot(Vector2(moveable.direction)) == 0:
+						emit_beam(beam_point, moveable.direction)
+				return
 
-		for i in range(inactive_lasers.size() - 1, -1, -1):
-			if beam_point == inactive_lasers[i].point:
-				# inactive_lasers[i].active = true
-				lasers_to_emit.append(inactive_lasers.pop_at(i))
+		if beam_point in grid.get_used_cells(Layer.DYNAMIC):
+			return
+
+		grid.set_cell(
+			Layer.H_BEAM if is_horizontal(direction) else Layer.V_BEAM,
+			beam_point,
+			Id.BEAM,
+			Vector2i(0, 0) if is_horizontal(direction) else Vector2i(2, 0)
+		)
+		beam_point += direction
 
 
 func _on_lose_state_entered() -> void:
