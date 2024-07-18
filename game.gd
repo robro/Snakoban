@@ -5,15 +5,13 @@ extends Node2D
 
 var snake: Snake
 var snake_color: Color
-var box_points: Array[Vector2i]
-var tail_pos: Vector2i
 var flash_timer := Timer.new()
 var reset_timer := Timer.new()
 
 enum Layer {
 	SNAKE,
 	SOLID,
-	PERMEABLE,
+	LIQUID,
 }
 
 enum Id {
@@ -30,36 +28,41 @@ func _ready() -> void:
 
 	# Snake tiles are sorted by the order they were drawn in
 	# so draw them from head to tail
+	snake_color = grid.get_layer_modulate(Layer.SNAKE)
 	snake = Snake.new(grid.get_used_cells(Layer.SNAKE))
 	snake.connect("want_move_to", _on_snake_want_move_to)
 	add_child(snake)
-	snake_color = grid.get_layer_modulate(Layer.SNAKE)
-	box_points.append_array(grid.get_used_cells_by_id(Layer.SOLID, Id.BOX))
+
 	$StateChart/Root/Lose.connect("state_entered", _on_lose_state_entered)
 	$StateChart/Root/Win.connect("state_entered", _on_win_state_entered)
 
 
 func _on_snake_want_move_to(point: Vector2i, direction: Vector2i) -> void:
-	var world_point_id := grid.get_cell_source_id(Layer.SOLID, point)
+	var solid_point_id := grid.get_cell_source_id(Layer.SOLID, point)
 
-	if world_point_id == Id.WALLS:
+	if solid_point_id == Id.WALLS or solid_point_id == Id.LASER:
 		return
 
-	if world_point_id == Id.FOOD:
-		grid.set_cell(Layer.SOLID, point)
+	elif solid_point_id == Id.FOOD:
+		clear_cell(grid, Layer.SOLID, point)
 		snake.grow()
-	else:
-		for i in box_points.size():
-			if point == box_points[i]:
-				var box_point := point + direction
-				if (box_point in grid.get_used_cells(Layer.SOLID) or
-					box_point in snake.points
-				):
-					return
-				else:
-					box_points[i] = box_point
-					grid.set_cell(Layer.SOLID, point)
-					grid.set_cell(Layer.SOLID, box_point, Id.BOX, Vector2i.ZERO)
+		if grid.get_used_cells_by_id(Layer.SOLID, Id.FOOD).size() == 0:
+			state_chart.send_event("won")
+
+	elif solid_point_id == Id.BOX:
+		var box_move_point := point + direction
+		if (box_move_point in grid.get_used_cells(Layer.SOLID) or
+			box_move_point in grid.get_used_cells(Layer.SNAKE)
+		):
+			return
+		else:
+			grid.set_cell(
+				Layer.SOLID,
+				box_move_point,
+				Id.BOX,
+				grid.get_cell_atlas_coords(Layer.SOLID, point)
+			)
+			clear_cell(grid, Layer.SOLID, point)
 
 	snake.move_to(point)
 	queue_redraw()
@@ -71,8 +74,8 @@ func _input(event: InputEvent) -> void:
 
 
 func _draw() -> void:
+	grid.clear_layer(Layer.LIQUID)
 	grid.clear_layer(Layer.SNAKE)
-	grid.clear_layer(Layer.PERMEABLE)
 
 	for i in snake.points.size():
 		grid.set_cell(Layer.SNAKE, snake.points[i], Id.SNAKE, snake.get_tile(i))
@@ -83,16 +86,11 @@ func _draw() -> void:
 		)
 		var beam_point := point + Vector2i(direction)
 		while (grid.get_cell_tile_data(Layer.SOLID, beam_point) == null):
-			grid.set_cell(Layer.PERMEABLE, beam_point, Id.LASER, Vector2i(0, 1))
+			if beam_point in snake.points:
+				state_chart.send_event("lost")
+
+			grid.set_cell(Layer.LIQUID, beam_point, Id.LASER, Vector2i(0, 1))
 			beam_point += Vector2i(direction)
-
-	for death_point in grid.get_used_cells_by_id(Layer.PERMEABLE, Id.LASER):
-		if death_point in snake.points:
-			state_chart.send_event("lost")
-			return
-
-	if grid.get_used_cells_by_id(Layer.SOLID, Id.FOOD).size() == 0:
-		state_chart.send_event("won")
 
 
 func _on_lose_state_entered() -> void:
@@ -133,9 +131,15 @@ func _on_win_state_entered() -> void:
 func _on_win_timer_timeout() -> void:
 	grid.set_layer_modulate(
 		Layer.SNAKE,
-		snake_color if grid.get_layer_modulate(Layer.SNAKE) == Color.WHITE else Color.WHITE
+		snake_color
+			if grid.get_layer_modulate(Layer.SNAKE) == Color.WHITE
+			else Color.WHITE
 	)
 
 
 func _on_reset_timer_timeout() -> void:
 	get_tree().reload_current_scene()
+
+
+func clear_cell(_grid: TileMap, _layer: int, _point: Vector2i) -> void:
+	_grid.set_cell(_layer, _point)

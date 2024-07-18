@@ -29,7 +29,7 @@ var _animation_player: AnimationPlayer
 func _ready():
 	if Engine.is_editor_hint():
 		return
-		
+
 	super._ready()
 	_animation_player = get_node_or_null(animation_player)
 
@@ -45,7 +45,7 @@ func _state_enter(expect_transition: bool = false):
 	var target_animation = animation_name
 	if target_animation == "":
 		target_animation = get_name()
-		
+
 	if _animation_player.current_animation == target_animation and _animation_player.is_playing():
 		return
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://brrycvyq1mk6x"]
+[gd_scene load_steps=7 format=3 uid="uid://brrycvyq1mk6x"]
 
 [ext_resource type="Script" path="res://game.gd" id="1_wy8fb"]
 [ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tileset.tres" id="2_rbfkp"]
@@ -6,9 +6,8 @@
 [ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_tjf7u"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_cybyh"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_jxcqd"]
-[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="7_8da15"]
 
-[node name="Test" type="Node2D"]
+[node name="Level" type="Node2D"]
 script = ExtResource("1_wy8fb")
 
 [node name="Grid" type="TileMap" parent="."]
@@ -56,10 +55,3 @@ script = ExtResource("5_cybyh")
 
 [node name="Lose" type="Node" parent="StateChart/Root"]
 script = ExtResource("5_cybyh")
-
-[node name="StateChartDebugger" parent="." instance=ExtResource("7_8da15")]
-offset_left = 177.0
-offset_top = -51.0
-offset_right = 304.0
-offset_bottom = 92.0
-initial_node_to_watch = NodePath("../StateChart")
