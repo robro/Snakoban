@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://blkcj83hevtgn"]
+
+[ext_resource type="Texture2D" uid="uid://vsyhu8fk1ri1" path="res://object/laser/beam.png" id="1_hyfw1"]
+
+[resource]
+atlas = ExtResource("1_hyfw1")
+region = Rect2(0, 0, 32, 8)
