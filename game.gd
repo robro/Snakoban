@@ -181,10 +181,6 @@ func _on_reset_timer_timeout() -> void:
 	get_tree().reload_current_scene()
 
 
-func clear_cell(_grid: TileMap, _layer: int, _point: Vector2i) -> void:
-	_grid.set_cell(_layer, _point)
-
-
 func is_horizontal(direction: Vector2i) -> bool:
 	return direction == Vector2i.RIGHT or direction == Vector2i.LEFT
 
