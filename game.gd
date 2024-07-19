@@ -5,8 +5,7 @@ extends Node2D
 
 var snake: Snake
 var snake_color: Color
-var moveables: Array[Node]
-var foods: Array[Food]
+var objects: Array[Node]
 var flash_timer := Timer.new()
 var reset_timer := Timer.new()
 
@@ -37,19 +36,23 @@ func _ready() -> void:
 	add_child(snake)
 
 	for point in grid.get_used_cells_by_id(Layer.DYNAMIC, Id.BOX):
-		moveables.append(Box.new(point, Id.BOX, grid.get_cell_atlas_coords(Layer.DYNAMIC, point)))
+		objects.append(Box.new(
+			point,
+			Id.BOX,
+			grid.get_cell_atlas_coords(Layer.DYNAMIC, point)
+		))
 
 	for point in grid.get_used_cells_by_id(Layer.DYNAMIC, Id.LASER):
 		var atlas_coord := grid.get_cell_atlas_coords(Layer.DYNAMIC, point)
 		if atlas_coord.y == 0:
-			moveables.append(Emitter.new(point, Id.LASER, atlas_coord.x))
+			objects.append(Emitter.new(point, Id.LASER, atlas_coord.x))
 		elif atlas_coord.y == 1:
-			moveables.append(Relay.new(point, Id.LASER, atlas_coord.x))
+			objects.append(Relay.new(point, Id.LASER, atlas_coord.x))
 		else:
 			assert(false, "invalid atlas coordinate")
 
 	for point in grid.get_used_cells_by_id(Layer.DYNAMIC, Id.FOOD):
-		foods.append(Food.new(point, grid.get_cell_atlas_coords(Layer.DYNAMIC, point)))
+		objects.append(Food.new(point, Id.FOOD, grid.get_cell_atlas_coords(Layer.DYNAMIC, point)))
 
 	$StateChart/Root/Lose.connect("state_entered", _on_lose_state_entered)
 	$StateChart/Root/Win.connect("state_entered", _on_win_state_entered)
@@ -59,16 +62,13 @@ func _on_snake_want_move_to(point: Vector2i, direction: Vector2i) -> void:
 	if point in grid.get_used_cells(Layer.STATIC):
 		return
 
-	for i in foods.size():
-		if point == foods[i].point:
-			snake.grow()
-			foods.remove_at(i)
-			if foods.size() == 0:
-				state_chart.send_event("won")
-			break
+	for i in objects.size():
+		if point == objects[i].point:
+			if objects[i] is Food:
+				snake.grow()
+				objects.remove_at(i)
+				break
 
-	for i in moveables.size():
-		if point == moveables[i].point:
 			var move_point := point + direction
 			if (move_point in grid.get_used_cells(Layer.DYNAMIC) or
 				move_point in grid.get_used_cells(Layer.STATIC) or
@@ -76,7 +76,7 @@ func _on_snake_want_move_to(point: Vector2i, direction: Vector2i) -> void:
 			):
 				return
 			else:
-				moveables[i].point = move_point
+				objects[i].point = move_point
 			break
 
 	snake.move_to(point)
@@ -97,17 +97,16 @@ func _draw() -> void:
 	for i in snake.points.size():
 		grid.set_cell(Layer.SNAKE, snake.points[i], Id.SNAKE, snake.get_tile(i))
 
-	for food in foods:
-		grid.set_cell(Layer.DYNAMIC, food.point, Id.FOOD, food.atlas_coord)
-
-	for relay: Relay in moveables.filter(func(n: Node) -> bool: return n is Relay):
+	for relay: Relay in objects.filter(is_relay):
 		relay.active = false
 
-	for emitter: Emitter in moveables.filter(func(n: Node) -> bool: return n is Emitter):
-		emit_beam(emitter.point, emitter.direction)
+	for node in objects:
+		grid.set_cell(Layer.DYNAMIC, node.point, node.id, node.atlas_coord)
+		if node is Emitter:
+			emit_beam(node.point, node.direction)
 
-	for moveable in moveables:
-		grid.set_cell(Layer.DYNAMIC, moveable.point, moveable.id, moveable.atlas_coord)
+	if objects.filter(is_food).size() == 0:
+		state_chart.send_event("won")
 
 
 func emit_beam(point: Vector2i, direction: Vector2i) -> void:
@@ -117,16 +116,13 @@ func emit_beam(point: Vector2i, direction: Vector2i) -> void:
 		if beam_point in snake.points:
 			state_chart.send_event("lost")
 
-		for moveable in moveables:
-			if beam_point == moveable.point:
-				if moveable is Relay:
-					moveable.active = true
-					if Vector2(direction).dot(Vector2(moveable.direction)) == 0:
-						emit_beam(beam_point, moveable.direction)
+		for node in objects:
+			if beam_point == node.point:
+				if node is Relay:
+					node.active = true
+					if Vector2(direction).dot(Vector2(node.direction)) != -1.0:
+						emit_beam(beam_point, node.direction)
 				return
-
-		if beam_point in grid.get_used_cells(Layer.DYNAMIC):
-			return
 
 		grid.set_cell(
 			Layer.H_BEAM if is_horizontal(direction) else Layer.V_BEAM,
@@ -191,3 +187,11 @@ func clear_cell(_grid: TileMap, _layer: int, _point: Vector2i) -> void:
 
 func is_horizontal(direction: Vector2i) -> bool:
 	return direction == Vector2i.RIGHT or direction == Vector2i.LEFT
+
+
+func is_food(node: Node) -> bool:
+	return node is Food
+
+
+func is_relay(node: Node) -> bool:
+	return node is Relay
