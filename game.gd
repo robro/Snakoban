@@ -3,8 +3,8 @@ extends Node2D
 @onready var grid: TileMap = $Grid
 @onready var state_chart: StateChart = $StateChart
 
-# var snake: Snake
-# var snake_color: Color
+var snake: Snake
+var snake_color: Color
 var objects: Array[Node]
 var flash_timer := Timer.new()
 var reset_timer := Timer.new()
@@ -30,10 +30,10 @@ enum Id {
 func _ready() -> void:
 	# Snake tiles are sorted by the order they were drawn in
 	# so draw them from head to tail
-	# snake_color = grid.get_layer_modulate(Layer.SNAKE)
-	# snake = Snake.new(grid.get_used_cells(Layer.SNAKE))
+	snake_color = grid.get_layer_modulate(Layer.SNAKE)
+	snake = Snake.new(grid.get_used_cells(Layer.SNAKE))
 	# snake.connect("want_move_to", _on_snake_want_move_to)
-	# add_child(snake)
+	add_child(snake)
 
 	for point in grid.get_used_cells_by_id(Layer.DYNAMIC, Id.BOX):
 		objects.append(Box.new(

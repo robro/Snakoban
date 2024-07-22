@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bgapuybf6it5w"]
+[gd_scene load_steps=7 format=3 uid="uid://bgapuybf6it5w"]
 
 [ext_resource type="Script" path="res://game.gd" id="1_xil76"]
 [ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tileset.tres" id="2_2nbgp"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_4inxj"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_i0a0s"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_dwxd1"]
-[ext_resource type="Script" path="res://object/snake/snake.gd" id="7_0ly3h"]
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_xil76")
@@ -60,7 +59,3 @@ script = ExtResource("5_i0a0s")
 
 [node name="Lose" type="Node" parent="StateChart/Root"]
 script = ExtResource("5_i0a0s")
-
-[node name="Snake" type="Node2D" parent="."]
-z_index = 1
-script = ExtResource("7_0ly3h")

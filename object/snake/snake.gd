@@ -1,5 +1,5 @@
 class_name Snake
-extends Node
+extends Node2D
 
 var body_part : PackedScene = preload("res://object/snake/body_part.tscn")
 var head : BodyPart
@@ -10,20 +10,7 @@ const unit_size : int = 8
 signal want_move_to(point: Vector2i, direction: Vector2i)
 
 
-func _ready() -> void:
-	auto_move_timer.wait_time = 0.5
-	auto_move_timer.one_shot = false
-	auto_move_timer.connect("timeout", _on_autoMoveTimer_timeout)
-	add_child(auto_move_timer)
-
-	var points : Array[Vector2] = [
-		Vector2(5, 5),
-		Vector2(4, 5),
-		Vector2(3, 5),
-		Vector2(2, 5),
-		Vector2(1, 5),
-		Vector2(0, 5),
-	]
+func _init(points: Array[Vector2i]) -> void:
 	var prev_part : BodyPart
 	for point in points:
 		var new_part : BodyPart = body_part.instantiate()
@@ -38,6 +25,13 @@ func _ready() -> void:
 			head = new_part
 
 		prev_part = new_part
+
+
+func _ready() -> void:
+	auto_move_timer.wait_time = 0.5
+	auto_move_timer.one_shot = false
+	auto_move_timer.connect("timeout", _on_autoMoveTimer_timeout)
+	add_child(auto_move_timer)
 
 
 func _physics_process(_delta: float) -> void:
