@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkh7x0qdxslah"]
+
+[ext_resource type="Texture2D" uid="uid://d28oyd84keeno" path="res://object/food/food.png" id="1_bll50"]
+[ext_resource type="Script" path="res://object/food/food.gd" id="1_h3skd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mfved"]
+size = Vector2(4, 4)
+
+[node name="Food" type="Area2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_h3skd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(4, 4)
+texture = ExtResource("1_bll50")
+hframes = 4
+vframes = 4
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(4, 4)
+shape = SubResource("RectangleShape2D_mfved")
+debug_color = Color(0.970626, 0.172342, 3.85046e-07, 0.42)

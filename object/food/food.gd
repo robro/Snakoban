@@ -1,12 +1,8 @@
 class_name Food
-extends Node
+extends Area2D
 
-var point: Vector2i
-var id: int
-var atlas_coord: Vector2i
+const color := Color.DEEP_PINK
 
 
-func _init(_point: Vector2i, _id: int, _atlas_coord: Vector2i) -> void:
-    point = _point
-    id = _id
-    atlas_coord = _atlas_coord
+func _ready() -> void:
+	modulate = color

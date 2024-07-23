@@ -28,6 +28,10 @@ window/stretch/mode="viewport"
 window/stretch/scale=4.0
 window/stretch/scale_mode="integer"
 
+[editor]
+
+naming/node_name_num_separator=2
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot_state_charts/plugin.cfg")

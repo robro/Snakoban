@@ -6,16 +6,16 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gtlxy"]
 size = Vector2(4, 4)
 
-[node name="BodyPart" type="StaticBody2D"]
-collision_layer = 2
-collision_mask = 7
+[node name="BodyPart" type="Node2D"]
 script = ExtResource("1_jlty5")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(4, 4)
 sprite_frames = ExtResource("1_ebxpe")
-animation = &"bent"
+animation = &"head"
 
-[node name="Collision" type="CollisionShape2D" parent="."]
-position = Vector2(4, 4)
+[node name="Collision" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+
+[node name="Shape" type="CollisionShape2D" parent="Collision"]
 shape = SubResource("RectangleShape2D_gtlxy")

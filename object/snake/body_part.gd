@@ -1,36 +1,43 @@
 class_name BodyPart
-extends StaticBody2D
+extends Node2D
 
 @onready var sprite : AnimatedSprite2D = $Sprite
+@onready var collision : Area2D = $Collision
 var prev_part : BodyPart
 var next_part : BodyPart
-var facing : Vector2
+var prev_pos : Vector2
 
 
 func _process(_delta: float) -> void:
+	if next_part:
+		rotation = next_part.position.angle_to_point(position)
+	elif prev_part:
+		rotation = position.angle_to_point(prev_part.position)
+
+	update_animation()
+
+
+func update_position(_position: Vector2) -> void:
+	prev_pos = position
+	position = _position
+
+	if next_part:
+		next_part.update_position(prev_pos)
+
+
+func update_animation() -> void:
 	if not prev_part:
 		sprite.animation = "head"
-		sprite.frame = roundi(pos_angle(facing.angle()) / (PI / 2))
 
 	elif not next_part:
 		sprite.animation = "tail"
-		sprite.frame = roundi(pos_angle(prev_part.facing.angle()) / (PI / 2))
 
-	elif facing == prev_part.facing:
+	elif rotation == prev_part.rotation:
 		sprite.animation = "straight"
-		sprite.frame = roundi(pos_angle(facing.angle()) / (PI / 2))
 
 	else:
 		sprite.animation = "bent"
-		sprite.frame = roundi(pos_angle(facing.angle() + angle_difference(prev_part.facing.angle(), facing.angle()) / PI - 0.5) / (PI / 2))
-
-
-func pos_angle(angle: float) -> float:
-	return fposmod(angle, TAU)
-
-
-func update_position(_facing: Vector2, _position: Vector2) -> void:
-	if next_part:
-		next_part.update_position(facing, position)
-	facing = _facing
-	position = _position
+		if angle_difference(rotation, prev_part.rotation) > 0:
+			sprite.flip_v = true
+		else:
+			sprite.flip_v = false

@@ -3,11 +3,13 @@ extends Node2D
 @onready var grid: TileMap = $Grid
 @onready var state_chart: StateChart = $StateChart
 
-var snake: Snake
-var snake_color: Color
-var objects: Array[Node]
+var snake : Snake
+var snake_color : Color
+var food : PackedScene = preload("res://object/food/food.tscn")
+var objects : Array[Node]
 var flash_timer := Timer.new()
 var reset_timer := Timer.new()
+const tile_size := 8
 
 enum Layer {
 	SNAKE,
@@ -52,11 +54,9 @@ func _ready() -> void:
 			assert(false, "invalid atlas coordinate")
 
 	for point in grid.get_used_cells_by_id(Layer.DYNAMIC, Id.FOOD):
-		objects.append(Food.new(
-			point,
-			Id.FOOD,
-			grid.get_cell_atlas_coords(Layer.DYNAMIC, point)
-		))
+		var new_food : Food = food.instantiate()
+		new_food.position = point * tile_size
+		add_child(new_food)
 
 	$StateChart/Root/Lose.connect("state_entered", _on_lose_state_entered)
 	$StateChart/Root/Win.connect("state_entered", _on_win_state_entered)
