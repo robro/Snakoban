@@ -91,7 +91,7 @@ func move(offset: Vector2) -> bool:
 
 func _on_mouth_entered(area: Area2D) -> void:
 	if area is Food:
-		area.queue_free()
+		area.eat()
 		var new_tail : BodyPart = body_part.instantiate()
 		tail.next_part = new_tail
 		new_tail.prev_part = tail
