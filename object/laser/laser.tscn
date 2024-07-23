@@ -62,4 +62,4 @@ size = Vector2i(8, 8)
 position = Vector2(4, 4)
 sprite_frames = ExtResource("3_v3klb")
 autoplay = "default"
-frame_progress = 0.833201
+frame_progress = 0.463185

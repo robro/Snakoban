@@ -15,6 +15,7 @@ var powered_relay : Laser
 func _ready() -> void:
 	beam_collision.shape = SegmentShape2D.new()
 	beam_collision.shape.b = Vector2.ZERO
+	modulate = on_color if active else off_color
 
 	if not emitter:
 		active = false
