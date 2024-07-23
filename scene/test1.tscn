@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://b78lxtdfhtk0m"]
 
 [ext_resource type="Script" path="res://game.gd" id="1_hsun5"]
-[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tileset.tres" id="2_o7a2f"]
+[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="2_o7a2f"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="3_3wds4"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_yvxwr"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_bb8rw"]

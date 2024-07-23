@@ -6,7 +6,9 @@ const tile_size : int = 8
 var body_part : PackedScene = preload("res://object/snake/body_part.tscn")
 var head : BodyPart
 var tail : BodyPart
-var auto_move_timer := Timer.new()
+var tick_timer := Timer.new()
+const slow_tick := 0.4
+const fast_tick := 0.1
 
 
 func _init(points: Array[Vector2i]) -> void:
@@ -30,58 +32,61 @@ func _init(points: Array[Vector2i]) -> void:
 
 
 func _ready() -> void:
-	auto_move_timer.wait_time = 0.5
-	auto_move_timer.one_shot = false
-	auto_move_timer.connect("timeout", _on_autoMoveTimer_timeout)
-	add_child(auto_move_timer)
+	tick_timer.connect("timeout", _on_tickTimer_timeout)
+	add_child(tick_timer)
 
 	head.collision.connect("area_entered", _on_mouth_entered)
 	modulate = color
 
 
-func _physics_process(_delta: float) -> void:
+func _process(_delta: float) -> void:
 	if (Input.is_action_just_pressed("up") or
 		Input.is_action_just_pressed("down") or
 		Input.is_action_just_pressed("left") or
 		Input.is_action_just_pressed("right")
 	):
 		handle_input()
-		auto_move_timer.wait_time = 0.4
-		auto_move_timer.start()
+		tick_timer.wait_time = slow_tick
+		tick_timer.start()
 
 
-func _on_autoMoveTimer_timeout() -> void:
+func _on_tickTimer_timeout() -> void:
 	handle_input()
-	auto_move_timer.wait_time = 0.1
-	auto_move_timer.start()
+	tick_timer.wait_time = fast_tick
+	tick_timer.start()
 
 
 func handle_input() -> void:
 	if Input.is_action_pressed("up"):
-		try_move(Vector2.UP)
+		move(Vector2.UP * tile_size)
 
 	elif Input.is_action_pressed("down"):
-		try_move(Vector2.DOWN)
+		move(Vector2.DOWN * tile_size)
 
 	elif Input.is_action_pressed("left"):
-		try_move(Vector2.LEFT)
+		move(Vector2.LEFT * tile_size)
 
 	elif Input.is_action_pressed("right"):
-		try_move(Vector2.RIGHT)
+		move(Vector2.RIGHT * tile_size)
 
 
-func try_move(direction: Vector2) -> void:
+func move(offset: Vector2) -> bool:
 	var query := PhysicsRayQueryParameters2D.create(
 		head.position,
-		head.position + direction * tile_size,
-		3,
+		head.position + offset,
 	)
 	query.collide_with_areas = true
 	var result := get_world_2d().direct_space_state.intersect_ray(query)
-	if not result:
-		head.update_position(head.position + direction * tile_size)
-	# else:
-	# 	print(result)
+	if result:
+		var collider : Node = result["collider"]
+		if (collider is TileMap or
+			collider.get_parent() is BodyPart or
+			collider is Box and not collider.move(offset)
+		):
+			return false
+
+	head.update_position(head.position + offset)
+	return true
 
 
 func _on_mouth_entered(area: Area2D) -> void:

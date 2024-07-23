@@ -1,12 +1,22 @@
 class_name Box
-extends Node
+extends Area2D
 
-var point: Vector2i
-var id: int
-var atlas_coord: Vector2i
+const color := Color.SANDY_BROWN
 
 
-func _init(_point: Vector2i, _id: int, _atlas_coord: Vector2i) -> void:
-    point = _point
-    id = _id
-    atlas_coord = _atlas_coord
+func _ready() -> void:
+	modulate = color
+
+
+func move(offset: Vector2) -> bool:
+	var query := PhysicsRayQueryParameters2D.create(
+		position,
+		position + offset,
+	)
+	query.collide_with_areas = true
+	var result := get_world_2d().direct_space_state.intersect_ray(query)
+	if result:
+		return false
+
+	position += offset
+	return true
