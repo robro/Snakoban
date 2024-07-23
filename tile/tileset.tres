@@ -1,7 +1,7 @@
 [gd_resource type="TileSet" load_steps=5 format=3 uid="uid://rq5otf577nnm"]
 
 [ext_resource type="Texture2D" uid="uid://cse4lmspeff8f" path="res://tile/sprites.png" id="1_yauue"]
-[ext_resource type="Texture2D" uid="uid://c4ievibbbm08b" path="res://world/walls_atlas.tres" id="2_rri2j"]
+[ext_resource type="Texture2D" uid="uid://pvugeknkr8jq" path="res://tile/walls.png" id="2_nrnrl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mxmje"]
 resource_name = "sprites"
@@ -43,7 +43,7 @@ texture_region_size = Vector2i(8, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o138l"]
 resource_name = "walls"
-texture = ExtResource("2_rri2j")
+texture = ExtResource("2_nrnrl")
 texture_region_size = Vector2i(8, 8)
 1:0/0 = 0
 1:0/0/modulate = Color(0.148639, 0.336733, 0.65717, 1)

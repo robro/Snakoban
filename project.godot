@@ -70,3 +70,4 @@ reset={
 2d_physics/layer_2="Snake"
 2d_physics/layer_3="Food"
 2d_physics/layer_4="Movable"
+2d_physics/layer_5="Beam"

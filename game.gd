@@ -6,6 +6,7 @@ extends Node2D
 var snake : Snake
 var food := preload("res://object/food/food.tscn")
 var box := preload("res://object/box/box.tscn")
+var laser := preload("res://object/laser/laser.tscn")
 var food_count : int = 0
 var flash_timer := Timer.new()
 var reset_timer := Timer.new()
@@ -43,6 +44,20 @@ func _ready() -> void:
 		var new_box : Box = box.instantiate()
 		new_box.position = point * tile_size + Vector2i.ONE * tile_size / 2
 		add_child(new_box)
+
+	for point : Vector2i in sprite_positions.filter(
+		func(p: Vector2i) -> bool:
+			return Rect2i(
+				Vector2i(0, 1),
+				Vector2i(4, 2),
+			).has_point(grid.get_cell_atlas_coords(Layer.SPRITES, p))
+	):
+		var new_laser : Laser = laser.instantiate()
+		new_laser.position = point * tile_size + Vector2i.ONE * tile_size / 2
+		new_laser.rotation += grid.get_cell_atlas_coords(Layer.SPRITES, point).x * (PI / 2)
+		if grid.get_cell_atlas_coords(Layer.SPRITES, point).y == 2:
+			new_laser.emitter = false
+		add_child(new_laser)
 
 	$StateChart/Root/Lose.connect("state_entered", _on_lose_state_entered)
 	$StateChart/Root/Win.connect("state_entered", _on_win_state_entered)

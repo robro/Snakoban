@@ -1,0 +1,25 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://oio25nkve24h"]
+
+[ext_resource type="Texture2D" uid="uid://vsyhu8fk1ri1" path="res://object/laser/beam.png" id="1_8ibtl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r6l4b"]
+atlas = ExtResource("1_8ibtl")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rf35c"]
+atlas = ExtResource("1_8ibtl")
+region = Rect2(8, 0, 8, 8)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r6l4b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rf35c")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
