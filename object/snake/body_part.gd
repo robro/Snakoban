@@ -7,6 +7,12 @@ var prev_part : BodyPart
 var next_part : BodyPart
 var prev_pos : Vector2
 
+signal hurt
+
+
+func _ready() -> void:
+	collision.connect("area_entered", _on_area_entered)
+
 
 func _process(_delta: float) -> void:
 	if next_part:
@@ -41,3 +47,8 @@ func update_animation() -> void:
 			sprite.flip_v = true
 		else:
 			sprite.flip_v = false
+
+
+func _on_area_entered(area: Area2D) -> void:
+	if area.collision_layer == 16:
+		emit_signal("hurt")

@@ -25,6 +25,7 @@ func _ready() -> void:
 		func(p: Vector2i) -> bool:
 			return grid.get_cell_atlas_coords(Layer.SPRITES, p) == Vector2i(0, 0)
 	))
+	snake.connect("died", _on_snake_died)
 	add_child(snake)
 
 	for point : Vector2i in sprite_positions.filter(
@@ -67,6 +68,10 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("reset"):
 		get_tree().reload_current_scene()
+
+
+func _on_snake_died() -> void:
+	state_chart.send_event("lost")
 
 
 func _on_lose_state_entered() -> void:

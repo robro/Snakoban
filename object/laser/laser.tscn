@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bqlopparciepg"]
+[gd_scene load_steps=6 format=3 uid="uid://bqlopparciepg"]
 
 [ext_resource type="Script" path="res://object/laser/laser.gd" id="1_dhy78"]
 [ext_resource type="Texture2D" uid="uid://bcu6i6tq8475h" path="res://object/laser/laser.png" id="2_x7ymj"]
@@ -9,9 +9,6 @@ size = Vector2(4, 4)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_fnq6b"]
 viewport_path = NodePath("Beam/BeamViewport")
-
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_qq5uy"]
-b = Vector2(8, 0)
 
 [node name="Laser" type="Area2D"]
 texture_filter = 1
@@ -55,7 +52,6 @@ collision_layer = 16
 collision_mask = 2
 
 [node name="Collision" type="CollisionShape2D" parent="Beam/BeamArea"]
-shape = SubResource("SegmentShape2D_qq5uy")
 debug_color = Color(0.580943, 0.382464, 1, 0.42)
 
 [node name="BeamViewport" type="SubViewport" parent="Beam"]
@@ -66,4 +62,4 @@ size = Vector2i(8, 8)
 position = Vector2(4, 4)
 sprite_frames = ExtResource("3_v3klb")
 autoplay = "default"
-frame_progress = 0.796053
+frame_progress = 0.833201

@@ -10,6 +10,8 @@ var tick_timer := Timer.new()
 const slow_tick := 0.4
 const fast_tick := 0.1
 
+signal died
+
 
 func _init(points: Array[Vector2i]) -> void:
 	assert(points.size() >= 2, "snake must have at least two segments")
@@ -25,6 +27,7 @@ func _init(points: Array[Vector2i]) -> void:
 		else:
 			head = curr_part
 
+		curr_part.connect("hurt", _on_bodyPart_hurt)
 		add_child(curr_part)
 		prev_part = curr_part
 
@@ -100,3 +103,7 @@ func _on_mouth_entered(area: Area2D) -> void:
 		new_tail.position = tail.prev_pos
 		tail = new_tail
 		call_deferred("add_child", new_tail)
+
+
+func _on_bodyPart_hurt() -> void:
+	emit_signal("died")
