@@ -42,15 +42,12 @@ func _ready() -> void:
 	modulate = color
 
 
-func _physics_process(_delta: float) -> void:
-	if (Input.is_action_just_pressed("up") or
-		Input.is_action_just_pressed("down") or
-		Input.is_action_just_pressed("left") or
-		Input.is_action_just_pressed("right")
-	):
-		handle_input()
-		tick_timer.wait_time = slow_tick
-		tick_timer.start()
+func _input(event: InputEvent) -> void:
+	if event.is_echo():
+		return
+	handle_input()
+	tick_timer.wait_time = slow_tick
+	tick_timer.start()
 
 
 func _on_tickTimer_timeout() -> void:

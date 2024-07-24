@@ -15,6 +15,7 @@ var powered_by : Array[Laser] = []
 func _ready() -> void:
 	beam_collision.shape = SegmentShape2D.new()
 	beam_collision.shape.b = Vector2.ZERO
+	modulate = color_on if emitter or not powered_by.is_empty() else color_off
 
 
 func _process(_delta: float) -> void:
@@ -39,7 +40,7 @@ func move(offset: Vector2) -> bool:
 func update_beam() -> void:
 	if not emitter and powered_by.is_empty():
 		if powering is Laser:
-			disconnect_from_relay(powering)
+			disconnect_from(powering)
 		modulate = color_off
 		beam_texture.size.x = 0
 		beam_collision.shape.b.x = 0
@@ -48,22 +49,21 @@ func update_beam() -> void:
 	var collider := probe.get_collider()
 
 	if collider != null:
-		if collider is Laser:
-			if collider.emitter == false:
-				if powering is Laser and powering != collider:
-					disconnect_from_relay(powering)
+		if collider is Laser and collider.emitter == false:
+			if powering is Laser and powering != collider:
+				disconnect_from(powering)
 
-				collider.connect_to_power(self)
-				powering = collider
-		else:
-			if powering is Laser:
-				disconnect_from_relay(powering)
+			collider.connect_to(self)
+			powering = collider
+
+		elif powering is Laser:
+			disconnect_from(powering)
 
 		beam_length = int((probe.global_position - probe.get_collision_point()).length() / 8) * 8
 
 	else:
 		if powering is Laser:
-			disconnect_from_relay(powering)
+			disconnect_from(powering)
 
 		beam_length = int(probe.target_position.x)
 
@@ -72,17 +72,16 @@ func update_beam() -> void:
 	modulate = color_on
 
 
-func connect_to_power(laser: Laser) -> void:
+func connect_to(laser: Laser) -> void:
 	if laser in powered_by:
 		return
 	# print("getting power from ", laser)
 	powered_by.append(laser)
 
 
-func disconnect_from_relay(relay: Laser) -> void:
-	# print("disconnecting from ", relay)
-	var self_idx := relay.powered_by.find(self)
-	if self_idx >= 0:
-		relay.powered_by.remove_at(self_idx)
-
+func disconnect_from(laser: Laser) -> void:
+	# print("disconnecting from ", laser)
 	powering = null
+	var self_idx := laser.powered_by.find(self)
+	if self_idx >= 0:
+		laser.powered_by.remove_at(self_idx)
