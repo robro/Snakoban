@@ -79,8 +79,6 @@ func _on_lose_state_entered() -> void:
 	reset_timer.connect("timeout", _on_reset_timer_timeout)
 	add_child(reset_timer)
 
-	snake.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
-
 
 func _on_lose_timer_timeout() -> void:
 	snake.visible = false if snake.visible else true
@@ -97,7 +95,7 @@ func _on_win_state_entered() -> void:
 	reset_timer.connect("timeout", _on_reset_timer_timeout)
 	add_child(reset_timer)
 
-	snake.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
+	snake.alive = false
 
 
 func _on_win_timer_timeout() -> void:

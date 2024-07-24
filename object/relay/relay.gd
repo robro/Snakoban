@@ -1,8 +1,7 @@
 class_name Relay
 extends Area2D
 
-@onready var beam : Beam = $Beam
-
+@export var beam : Beam
 const color := Color.DIM_GRAY
 var laser_count := 0
 
@@ -11,7 +10,7 @@ func _init() -> void:
 	modulate = color
 
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	for area in get_overlapping_areas():
 		if area.get_collision_layer_value(5) and area.is_visible_in_tree():
 			if is_equal_approx(abs(angle_difference(global_rotation, area.global_rotation)), PI):

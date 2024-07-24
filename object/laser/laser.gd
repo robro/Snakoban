@@ -1,7 +1,7 @@
 class_name Laser
 extends Area2D
 
-@onready var beam : Beam = $Beam
+@export var beam : Beam
 var color := Color.PURPLE
 
 

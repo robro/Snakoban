@@ -9,6 +9,7 @@ var body_part : PackedScene = preload("res://object/snake/body_part.tscn")
 var head : BodyPart
 var tail : BodyPart
 var tick_timer := Timer.new()
+var alive := true
 
 signal died
 
@@ -19,35 +20,44 @@ func _ready() -> void:
 	add_child(tick_timer)
 
 
-func _input(event: InputEvent) -> void:
-	# if tick_timer.is_stopped():
-	# 	handle_input(event)
-	# 	tick_timer.start(fast_tick)
+func _physics_process(_delta: float) -> void:
+	if not alive:
+		return
+
+	# if Input.is_action_just_pressed("up", true):
+	# 	move(Vector2.UP * tile_size)
+	# 	tick_timer.start(slow_tick)
 	# 	return
 
-	# if event.is_echo():
+	# if Input.is_action_just_pressed("down", true):
+	# 	move(Vector2.DOWN * tile_size)
+	# 	tick_timer.start(slow_tick)
 	# 	return
 
-	handle_input(event)
-	tick_timer.start(slow_tick)
+	# if Input.is_action_just_pressed("left", true):
+	# 	move(Vector2.LEFT * tile_size)
+	# 	tick_timer.start(slow_tick)
+	# 	return
 
+	# if Input.is_action_just_pressed("right", true):
+	# 	move(Vector2.RIGHT * tile_size)
+	# 	tick_timer.start(slow_tick)
+	# 	return
 
-func handle_input(event: InputEvent) -> void:
-	if event.is_action_pressed("up", true):
-		move(Vector2.UP * tile_size)
-		return
+	if tick_timer.is_stopped():
+		if Input.is_action_pressed("up", true):
+			move(Vector2.UP * tile_size)
 
-	if event.is_action_pressed("down", true):
-		move(Vector2.DOWN * tile_size)
-		return
+		elif Input.is_action_pressed("down", true):
+			move(Vector2.DOWN * tile_size)
 
-	if event.is_action_pressed("left", true):
-		move(Vector2.LEFT * tile_size)
-		return
+		elif Input.is_action_pressed("left", true):
+			move(Vector2.LEFT * tile_size)
 
-	if event.is_action_pressed("right", true):
-		move(Vector2.RIGHT * tile_size)
-		return
+		elif Input.is_action_pressed("right", true):
+			move(Vector2.RIGHT * tile_size)
+
+		# tick_timer.start(fast_tick)
 
 
 func move(offset: Vector2) -> bool:
@@ -98,4 +108,5 @@ func _on_mouth_entered(area: Area2D) -> void:
 
 
 func _on_bodyPart_hurt() -> void:
+	alive = false
 	emit_signal("died")
