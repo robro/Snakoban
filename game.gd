@@ -59,6 +59,12 @@ func _on_snake_died() -> void:
 	state_chart.send_event("lost")
 
 
+func _on_food_eaten() -> void:
+	food_count -= 1
+	if food_count == 0:
+		state_chart.send_event("won")
+
+
 func _on_lose_state_entered() -> void:
 	flash_timer.wait_time = lose_flash_tick
 	flash_timer.autostart = true
@@ -97,9 +103,3 @@ func _on_win_timer_timeout() -> void:
 
 func _on_reset_timer_timeout() -> void:
 	get_tree().reload_current_scene()
-
-
-func _on_food_eaten() -> void:
-	food_count -= 1
-	if food_count == 0:
-		state_chart.send_event("won")

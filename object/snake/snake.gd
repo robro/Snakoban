@@ -100,6 +100,7 @@ func _on_mouth_entered(area: Area2D) -> void:
 		tail.next_part = new_tail
 		new_tail.prev_part = tail
 		new_tail.position = tail.prev_pos
+		new_tail.connect("hurt", _on_bodyPart_hurt)
 		tail = new_tail
 		call_deferred("add_child", new_tail)
 
