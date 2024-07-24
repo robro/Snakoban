@@ -44,29 +44,33 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if tick_timer.is_stopped():
-		handle_input()
+		handle_input(event)
 		tick_timer.start(fast_tick)
 		return
 
 	if event.is_echo():
 		return
 
-	handle_input()
+	handle_input(event)
 	tick_timer.start(slow_tick)
 
 
-func handle_input() -> void:
-	if Input.is_action_pressed("up"):
+func handle_input(event: InputEvent) -> void:
+	if event.is_action_pressed("up", true):
 		move(Vector2.UP * tile_size)
+		return
 
-	elif Input.is_action_pressed("down"):
+	if event.is_action_pressed("down", true):
 		move(Vector2.DOWN * tile_size)
+		return
 
-	elif Input.is_action_pressed("left"):
+	if event.is_action_pressed("left", true):
 		move(Vector2.LEFT * tile_size)
+		return
 
-	elif Input.is_action_pressed("right"):
+	if event.is_action_pressed("right", true):
 		move(Vector2.RIGHT * tile_size)
+		return
 
 
 func move(offset: Vector2) -> bool:
@@ -87,7 +91,6 @@ func move(offset: Vector2) -> bool:
 			return false
 
 	head.update_position(head.position + offset)
-	print(head.position + offset)
 	return true
 
 
