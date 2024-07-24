@@ -3,53 +3,30 @@ extends Node2D
 
 const color : Color = Color.FOREST_GREEN
 const tile_size : int = 8
+const slow_tick := 0.4
+const fast_tick := 0.1
 var body_part : PackedScene = preload("res://object/snake/body_part.tscn")
 var head : BodyPart
 var tail : BodyPart
 var tick_timer := Timer.new()
-const slow_tick := 0.4
-const fast_tick := 0.1
 
 signal died
 
 
-func _init(points: Array[Vector2i]) -> void:
-	assert(points.size() >= 2, "snake must have at least two segments")
-	var curr_part : BodyPart
-	var prev_part : BodyPart
-
-	for point in points:
-		curr_part = body_part.instantiate()
-		curr_part.position = point * tile_size + Vector2i.ONE * tile_size / 2
-		if prev_part:
-			prev_part.next_part = curr_part
-			curr_part.prev_part = prev_part
-		else:
-			head = curr_part
-
-		curr_part.connect("hurt", _on_bodyPart_hurt)
-		add_child(curr_part)
-		prev_part = curr_part
-
-	tail = curr_part
-
-
 func _ready() -> void:
+	modulate = color
 	tick_timer.one_shot = true
 	add_child(tick_timer)
 
-	head.collision.connect("area_entered", _on_mouth_entered)
-	modulate = color
-
 
 func _input(event: InputEvent) -> void:
-	if tick_timer.is_stopped():
-		handle_input(event)
-		tick_timer.start(fast_tick)
-		return
+	# if tick_timer.is_stopped():
+	# 	handle_input(event)
+	# 	tick_timer.start(fast_tick)
+	# 	return
 
-	if event.is_echo():
-		return
+	# if event.is_echo():
+	# 	return
 
 	handle_input(event)
 	tick_timer.start(slow_tick)
@@ -74,6 +51,9 @@ func handle_input(event: InputEvent) -> void:
 
 
 func move(offset: Vector2) -> bool:
+	if head == null:
+		return false
+
 	var query := PhysicsRayQueryParameters2D.create(
 		head.position,
 		head.position + offset,
@@ -82,10 +62,10 @@ func move(offset: Vector2) -> bool:
 	query.collide_with_areas = true
 	var result := get_world_2d().direct_space_state.intersect_ray(query)
 	if result:
-		var collider : Object = result["collider"]
+		var collider : Node2D = result["collider"]
 		if (collider is TileMap or
 			collider.get_parent() is BodyPart or
-			collider.collision_layer == 8 and not collider.move(offset)
+			collider.get_collision_layer_value(4) and not collider.move(offset)
 		):
 			return false
 
@@ -93,16 +73,28 @@ func move(offset: Vector2) -> bool:
 	return true
 
 
+func append_body_part(point: Vector2) -> void:
+	var new_part := body_part.instantiate()
+	call_deferred("add_child", new_part)
+	new_part.connect("hurt", _on_bodyPart_hurt)
+	new_part.position = point
+
+	if tail:
+		tail.next_part = new_part
+		new_part.prev_part = tail
+		tail.update_rotation()
+		tail.update_animation()
+		tail = new_part
+	else:
+		head = new_part
+		tail = new_part
+		head.collision.connect("area_entered", _on_mouth_entered)
+
+
 func _on_mouth_entered(area: Area2D) -> void:
 	if area is Food:
+		append_body_part(tail.prev_pos)
 		area.eat()
-		var new_tail : BodyPart = body_part.instantiate()
-		tail.next_part = new_tail
-		new_tail.prev_part = tail
-		new_tail.position = tail.prev_pos
-		new_tail.connect("hurt", _on_bodyPart_hurt)
-		tail = new_tail
-		call_deferred("add_child", new_tail)
 
 
 func _on_bodyPart_hurt() -> void:

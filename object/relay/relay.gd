@@ -13,7 +13,7 @@ func _init() -> void:
 
 func _process(_delta: float) -> void:
 	for area in get_overlapping_areas():
-		if area.collision_layer == 16:
+		if area.get_collision_layer_value(5) and area.is_visible_in_tree():
 			if is_equal_approx(abs(angle_difference(global_rotation, area.global_rotation)), PI):
 				beam_off()
 			else:
@@ -41,10 +41,8 @@ func move(offset: Vector2) -> bool:
 
 
 func beam_on() -> void:
-	beam.process_mode = Node.PROCESS_MODE_INHERIT
 	beam.visible = true
 
 
 func beam_off() -> void:
-	beam.process_mode = Node.PROCESS_MODE_DISABLED
 	beam.visible = false

@@ -1,8 +1,8 @@
 class_name BodyPart
 extends Node2D
 
-@onready var sprite : AnimatedSprite2D = $Sprite
-@onready var collision : Area2D = $Collision
+@export var sprite : AnimatedSprite2D
+@export var collision : Area2D
 var prev_part : BodyPart
 var next_part : BodyPart
 var prev_pos : Vector2
@@ -11,7 +11,6 @@ signal hurt
 
 
 func _ready() -> void:
-	collision.connect("area_entered", _on_area_entered)
 	update_rotation()
 	update_animation()
 
@@ -19,6 +18,10 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	update_rotation()
 	update_animation()
+	for area in collision.get_overlapping_areas():
+		if area.get_collision_layer_value(5) and area.is_visible_in_tree():
+			emit_signal("hurt")
+			return
 
 
 func update_position(_position: Vector2) -> void:
@@ -52,8 +55,3 @@ func update_animation() -> void:
 			sprite.flip_v = true
 		else:
 			sprite.flip_v = false
-
-
-func _on_area_entered(area: Area2D) -> void:
-	if area.collision_layer == 16:
-		emit_signal("hurt")

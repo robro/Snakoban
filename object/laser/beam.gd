@@ -1,9 +1,10 @@
 class_name Beam
 extends Node2D
 
-@onready var probe : RayCast2D = $Probe
-@onready var beam_texture : TextureRect = $BeamTexture
-@onready var beam_collision : CollisionShape2D = $BeamArea/Collision
+@export var probe : RayCast2D
+@export var beam_texture : TextureRect
+@export var beam_area : Area2D
+@export var beam_collision : CollisionShape2D
 
 
 func _process(_delta: float) -> void:

@@ -10,9 +10,14 @@ viewport_path = NodePath("BeamViewport")
 resource_local_to_scene = true
 b = Vector2(8, 0)
 
-[node name="Beam" type="Node2D"]
+[node name="Beam" type="Node2D" node_paths=PackedStringArray("probe", "beam_texture", "beam_area", "beam_collision")]
+process_priority = -1
 texture_filter = 1
 script = ExtResource("1_tp3mq")
+probe = NodePath("Probe")
+beam_texture = NodePath("BeamTexture")
+beam_area = NodePath("BeamArea")
+beam_collision = NodePath("BeamArea/Collision")
 
 [node name="Probe" type="RayCast2D" parent="."]
 target_position = Vector2(128, 0)

@@ -6,11 +6,13 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gtlxy"]
 size = Vector2(4, 4)
 
-[node name="BodyPart" type="Node2D"]
-process_mode = 3
+[node name="BodyPart" type="Node2D" node_paths=PackedStringArray("sprite", "collision")]
+process_priority = -1
 z_index = 1
 texture_filter = 1
 script = ExtResource("1_jlty5")
+sprite = NodePath("Sprite")
+collision = NodePath("Collision")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_ebxpe")

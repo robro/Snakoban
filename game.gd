@@ -9,6 +9,7 @@ var snake : Snake
 var food_count := 0
 var flash_timer := Timer.new()
 var reset_timer := Timer.new()
+const snake_scene : PackedScene = preload("res://object/snake/snake.tscn")
 const tile_size := 8
 const win_flash_tick := 0.1
 const lose_flash_tick := 0.1
@@ -25,9 +26,11 @@ func _ready() -> void:
 	var snake_part_positions := grid.get_used_cells(Layer.SNAKE)
 	var sprite_positions := grid.get_used_cells(Layer.SPRITE)
 
-	snake = Snake.new(snake_part_positions)
+	snake = snake_scene.instantiate()
 	snake.connect("died", _on_snake_died)
 	add_child(snake)
+	for point in snake_part_positions:
+		snake.append_body_part(point * tile_size + Vector2i.ONE * tile_size / 2)
 
 	for point in sprite_positions:
 		var tile_data := grid.get_cell_tile_data(Layer.SPRITE, point)
@@ -76,7 +79,7 @@ func _on_lose_state_entered() -> void:
 	reset_timer.connect("timeout", _on_reset_timer_timeout)
 	add_child(reset_timer)
 
-	snake.process_mode = Node.PROCESS_MODE_DISABLED
+	snake.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 
 
 func _on_lose_timer_timeout() -> void:
@@ -94,7 +97,7 @@ func _on_win_state_entered() -> void:
 	reset_timer.connect("timeout", _on_reset_timer_timeout)
 	add_child(reset_timer)
 
-	snake.process_mode = Node.PROCESS_MODE_DISABLED
+	snake.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 
 
 func _on_win_timer_timeout() -> void:
