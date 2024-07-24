@@ -35,7 +35,7 @@ func _init(points: Array[Vector2i]) -> void:
 
 
 func _ready() -> void:
-	tick_timer.connect("timeout", _on_tickTimer_timeout)
+	tick_timer.one_shot = true
 	add_child(tick_timer)
 
 	head.collision.connect("area_entered", _on_mouth_entered)
@@ -43,17 +43,16 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if tick_timer.is_stopped():
+		handle_input()
+		tick_timer.start(fast_tick)
+		return
+
 	if event.is_echo():
 		return
-	handle_input()
-	tick_timer.wait_time = slow_tick
-	tick_timer.start()
 
-
-func _on_tickTimer_timeout() -> void:
 	handle_input()
-	tick_timer.wait_time = fast_tick
-	tick_timer.start()
+	tick_timer.start(slow_tick)
 
 
 func handle_input() -> void:
@@ -88,6 +87,7 @@ func move(offset: Vector2) -> bool:
 			return false
 
 	head.update_position(head.position + offset)
+	print(head.position + offset)
 	return true
 
 

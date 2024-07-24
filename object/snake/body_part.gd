@@ -12,14 +12,12 @@ signal hurt
 
 func _ready() -> void:
 	collision.connect("area_entered", _on_area_entered)
+	update_rotation()
+	update_animation()
 
 
 func _process(_delta: float) -> void:
-	if next_part:
-		rotation = next_part.position.angle_to_point(position)
-	elif prev_part:
-		rotation = position.angle_to_point(prev_part.position)
-
+	update_rotation()
 	update_animation()
 
 
@@ -29,6 +27,13 @@ func update_position(_position: Vector2) -> void:
 
 	if next_part:
 		next_part.update_position(prev_pos)
+
+
+func update_rotation() -> void:
+	if next_part:
+		rotation = next_part.position.angle_to_point(position)
+	elif prev_part:
+		rotation = position.angle_to_point(prev_part.position)
 
 
 func update_animation() -> void:
