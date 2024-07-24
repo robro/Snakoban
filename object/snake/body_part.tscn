@@ -14,7 +14,7 @@ script = ExtResource("1_jlty5")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_ebxpe")
-animation = &"head"
+animation = &"tail"
 
 [node name="Collision" type="Area2D" parent="."]
 collision_layer = 2

@@ -71,3 +71,7 @@ reset={
 2d_physics/layer_3="Food"
 2d_physics/layer_4="Movable"
 2d_physics/layer_5="Beam"
+
+[rendering]
+
+anti_aliasing/screen_space_roughness_limiter/enabled=false

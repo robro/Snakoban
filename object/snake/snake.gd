@@ -82,11 +82,10 @@ func move(offset: Vector2) -> bool:
 	query.collide_with_areas = true
 	var result := get_world_2d().direct_space_state.intersect_ray(query)
 	if result:
-		var collider : Node = result["collider"]
+		var collider : Object = result["collider"]
 		if (collider is TileMap or
 			collider.get_parent() is BodyPart or
-			collider is Box and not collider.move(offset) or
-			collider is Laser and not collider.move(offset)
+			collider.collision_layer == 8 and not collider.move(offset)
 		):
 			return false
 

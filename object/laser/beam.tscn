@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=3 uid="uid://6ehx3rxmwyb6"]
+
+[ext_resource type="SpriteFrames" uid="uid://oio25nkve24h" path="res://object/laser/beam_frames.tres" id="1_o4qj0"]
+[ext_resource type="Script" path="res://object/laser/beam.gd" id="1_tp3mq"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_fnq6b"]
+viewport_path = NodePath("BeamViewport")
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_emfd8"]
+resource_local_to_scene = true
+b = Vector2(8, 0)
+
+[node name="Beam" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_tp3mq")
+
+[node name="Probe" type="RayCast2D" parent="."]
+target_position = Vector2(128, 0)
+collision_mask = 13
+collide_with_areas = true
+
+[node name="BeamTexture" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 4.0
+offset_top = -4.0
+offset_right = 12.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ViewportTexture_fnq6b")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="BeamViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(8, 8)
+
+[node name="BeamAnimation" type="AnimatedSprite2D" parent="BeamViewport"]
+position = Vector2(4, 4)
+sprite_frames = ExtResource("1_o4qj0")
+autoplay = "default"
+frame_progress = 0.638147
+
+[node name="BeamArea" type="Area2D" parent="."]
+position = Vector2(5, 0)
+collision_layer = 16
+collision_mask = 2
+
+[node name="Collision" type="CollisionShape2D" parent="BeamArea"]
+shape = SubResource("SegmentShape2D_emfd8")
+debug_color = Color(0.82679, 0.394429, 3.85046e-07, 0.623529)

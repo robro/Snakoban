@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://68i7icbm1err"]
+
+[ext_resource type="Script" path="res://object/relay/relay.gd" id="1_w680u"]
+[ext_resource type="Texture2D" uid="uid://cse4lmspeff8f" path="res://tile/sprites.png" id="2_xsr8x"]
+[ext_resource type="PackedScene" uid="uid://6ehx3rxmwyb6" path="res://object/laser/beam.tscn" id="3_2ooo8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mfved"]
+size = Vector2(8, 8)
+
+[node name="Relay" type="Area2D"]
+texture_filter = 1
+collision_layer = 8
+collision_mask = 16
+script = ExtResource("1_w680u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_xsr8x")
+hframes = 4
+vframes = 4
+frame = 8
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_mfved")
+debug_color = Color(0, 0.596948, 0.717242, 0.42)
+
+[node name="Beam" parent="." instance=ExtResource("3_2ooo8")]
