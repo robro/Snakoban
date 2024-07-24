@@ -5,53 +5,20 @@ extends Area2D
 @onready var beam_texture : TextureRect = $Beam/BeamTexture
 @onready var beam_collision : CollisionShape2D = $Beam/BeamArea/Collision
 var emitter := true
-var active := true
-var on_color := Color.PURPLE
-var off_color := Color.DIM_GRAY
+var color_on := Color.PURPLE
+var color_off := Color.DIM_GRAY
 var beam_length : int = 0
-var powered_relay : Laser
+var powering : Laser = null
+var powered_by : Array[Laser] = []
 
 
 func _ready() -> void:
 	beam_collision.shape = SegmentShape2D.new()
 	beam_collision.shape.b = Vector2.ZERO
-	modulate = on_color if active else off_color
-
-	if not emitter:
-		active = false
 
 
 func _process(_delta: float) -> void:
-	if powered_relay is Laser:
-		powered_relay.active = false
-
-	if not active:
-		powered_relay = null
-		modulate = off_color
-		beam_texture.visible = false
-		beam_collision.disabled = true
-		return
-
-	modulate = on_color
-
-	var collider := probe.get_collider()
-	if collider != null:
-		if collider is Laser and collider.emitter == false:
-			powered_relay = collider
-			collider.active = true
-
-		beam_length = int((probe.global_position - probe.get_collision_point()).length() / 8) * 8
-	else:
-		beam_length = int(probe.target_position.x)
-
-	if beam_length > 0:
-		beam_texture.visible = true
-		beam_collision.disabled = false
-		beam_texture.size.x = beam_length
-		beam_collision.shape.b.x = beam_length
-	else:
-		beam_texture.visible = false
-		beam_collision.disabled = true
+	update_beam()
 
 
 func move(offset: Vector2) -> bool:
@@ -67,3 +34,55 @@ func move(offset: Vector2) -> bool:
 
 	position += offset
 	return true
+
+
+func update_beam() -> void:
+	if not emitter and powered_by.is_empty():
+		if powering is Laser:
+			disconnect_from_relay(powering)
+		modulate = color_off
+		beam_texture.size.x = 0
+		beam_collision.shape.b.x = 0
+		return
+
+	var collider := probe.get_collider()
+
+	if collider != null:
+		if collider is Laser:
+			if collider.emitter == false:
+				if powering is Laser and powering != collider:
+					disconnect_from_relay(powering)
+
+				collider.connect_to_power(self)
+				powering = collider
+		else:
+			if powering is Laser:
+				disconnect_from_relay(powering)
+
+		beam_length = int((probe.global_position - probe.get_collision_point()).length() / 8) * 8
+
+	else:
+		if powering is Laser:
+			disconnect_from_relay(powering)
+
+		beam_length = int(probe.target_position.x)
+
+	beam_texture.size.x = beam_length
+	beam_collision.shape.b.x = beam_length
+	modulate = color_on
+
+
+func connect_to_power(laser: Laser) -> void:
+	if laser in powered_by:
+		return
+	# print("getting power from ", laser)
+	powered_by.append(laser)
+
+
+func disconnect_from_relay(relay: Laser) -> void:
+	# print("disconnecting from ", relay)
+	var self_idx := relay.powered_by.find(self)
+	if self_idx >= 0:
+		relay.powered_by.remove_at(self_idx)
+
+	powering = null

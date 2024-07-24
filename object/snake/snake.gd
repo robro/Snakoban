@@ -42,7 +42,7 @@ func _ready() -> void:
 	modulate = color
 
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if (Input.is_action_just_pressed("up") or
 		Input.is_action_just_pressed("down") or
 		Input.is_action_just_pressed("left") or
