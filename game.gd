@@ -1,79 +1,53 @@
 extends Node2D
 
-@onready var grid: TileMap = $Grid
-@onready var state_chart: StateChart = $StateChart
+@export var state_chart: StateChart
+@export var win_state : StateChartState
+@export var lose_state : StateChartState
+@export var grid: TileMap
 
 var snake : Snake
-var food := preload("res://object/food/food.tscn")
-var box := preload("res://object/box/box.tscn")
-var laser := preload("res://object/laser/laser.tscn")
-var relay := preload("res://object/relay/relay.tscn")
-var food_count : int = 0
+var food_count := 0
 var flash_timer := Timer.new()
 var reset_timer := Timer.new()
 const tile_size := 8
+const win_flash_tick := 0.1
+const lose_flash_tick := 0.1
+const reset_wait_time := 1.0
 
 enum Layer {
-	SPRITES,
-	WALLS,
+	SNAKE,
+	SPRITE,
+	STATIC,
 }
 
 
 func _ready() -> void:
-	var sprite_positions := grid.get_used_cells(Layer.SPRITES)
+	var snake_part_positions := grid.get_used_cells(Layer.SNAKE)
+	var sprite_positions := grid.get_used_cells(Layer.SPRITE)
 
-	snake = Snake.new(sprite_positions.filter(
-		func(p: Vector2i) -> bool:
-			return grid.get_cell_atlas_coords(Layer.SPRITES, p) == Vector2i(0, 0)
-	))
+	snake = Snake.new(snake_part_positions)
 	snake.connect("died", _on_snake_died)
 	add_child(snake)
 
-	for point : Vector2i in sprite_positions.filter(
-		func(p: Vector2i) -> bool:
-			return grid.get_cell_atlas_coords(Layer.SPRITES, p) == Vector2i(2, 0)
-	):
-		var new_food : Food = food.instantiate()
-		new_food.position = point * tile_size + Vector2i.ONE * tile_size / 2
-		new_food.connect("eaten", _on_food_eaten)
-		food_count += 1
-		add_child(new_food)
+	for point in sprite_positions:
+		var tile_data := grid.get_cell_tile_data(Layer.SPRITE, point)
+		var rotation_index : int = tile_data.get_custom_data("RotationIndex")
+		var scene_path : String = tile_data.get_custom_data("ScenePath")
+		var packed_scene : PackedScene = load(scene_path)
+		var scene_instance : Node2D = packed_scene.instantiate()
+		add_child(scene_instance)
+		scene_instance.position = point * tile_size + Vector2i.ONE * tile_size / 2
+		scene_instance.rotation = rotation_index * (PI / 2)
+		if scene_instance is Food:
+			food_count += 1
+			scene_instance.connect("eaten", _on_food_eaten)
 
-	for point : Vector2i in sprite_positions.filter(
-		func(p: Vector2i) -> bool:
-			return grid.get_cell_atlas_coords(Layer.SPRITES, p) == Vector2i(1, 0)
-	):
-		var new_box : Box = box.instantiate()
-		new_box.position = point * tile_size + Vector2i.ONE * tile_size / 2
-		add_child(new_box)
+	assert(food_count > 0, "scene must have food")
 
-	for point : Vector2i in sprite_positions.filter(
-		func(p: Vector2i) -> bool:
-			return Rect2i(
-				Vector2i(0, 1),
-				Vector2i(4, 1),
-			).has_point(grid.get_cell_atlas_coords(Layer.SPRITES, p))
-	):
-		var new_laser : Laser = laser.instantiate()
-		new_laser.position = point * tile_size + Vector2i.ONE * tile_size / 2
-		new_laser.rotation += grid.get_cell_atlas_coords(Layer.SPRITES, point).x * (PI / 2)
-		add_child(new_laser)
-
-	for point : Vector2i in sprite_positions.filter(
-		func(p: Vector2i) -> bool:
-			return Rect2i(
-				Vector2i(0, 2),
-				Vector2i(4, 1),
-			).has_point(grid.get_cell_atlas_coords(Layer.SPRITES, p))
-	):
-		var new_relay : Relay = relay.instantiate()
-		new_relay.position = point * tile_size + Vector2i.ONE * tile_size / 2
-		new_relay.rotation += grid.get_cell_atlas_coords(Layer.SPRITES, point).x * (PI / 2)
-		add_child(new_relay)
-
-	$StateChart/Root/Lose.connect("state_entered", _on_lose_state_entered)
-	$StateChart/Root/Win.connect("state_entered", _on_win_state_entered)
-	grid.clear_layer(Layer.SPRITES)
+	win_state.connect("state_entered", _on_win_state_entered)
+	lose_state.connect("state_entered", _on_lose_state_entered)
+	grid.clear_layer(Layer.SNAKE)
+	grid.clear_layer(Layer.SPRITE)
 
 
 func _input(event: InputEvent) -> void:
@@ -86,12 +60,12 @@ func _on_snake_died() -> void:
 
 
 func _on_lose_state_entered() -> void:
-	flash_timer.wait_time = 0.1
+	flash_timer.wait_time = lose_flash_tick
 	flash_timer.autostart = true
 	flash_timer.connect("timeout", _on_lose_timer_timeout)
 	add_child(flash_timer)
 
-	reset_timer.wait_time = 1.0
+	reset_timer.wait_time = reset_wait_time
 	reset_timer.autostart = true
 	reset_timer.connect("timeout", _on_reset_timer_timeout)
 	add_child(reset_timer)
@@ -104,12 +78,12 @@ func _on_lose_timer_timeout() -> void:
 
 
 func _on_win_state_entered() -> void:
-	flash_timer.wait_time = 0.1
+	flash_timer.wait_time = win_flash_tick
 	flash_timer.autostart = true
 	flash_timer.connect("timeout", _on_win_timer_timeout)
 	add_child(flash_timer)
 
-	reset_timer.wait_time = 1.0
+	reset_timer.wait_time = reset_wait_time
 	reset_timer.autostart = true
 	reset_timer.connect("timeout", _on_reset_timer_timeout)
 	add_child(reset_timer)
