@@ -2,26 +2,27 @@ class_name Relay
 extends Area2D
 
 @export var beam : Beam
-const color := Color.DIM_GRAY
-var laser_count := 0
+const off_color := Color.DIM_GRAY
+const on_color := Color.PURPLE
 
 
-func _init() -> void:
-	modulate = color
+func _ready() -> void:
+	modulate = off_color
+	beam_off()
 
 
 func _physics_process(_delta: float) -> void:
-	for area in get_overlapping_areas():
-		if area.get_collision_layer_value(5) and area.is_visible_in_tree():
-			if is_equal_approx(abs(angle_difference(global_rotation, area.global_rotation)), PI):
-				beam_off()
-			else:
-				beam_on()
-			modulate = Color.PURPLE
-			return
-
+	modulate = off_color
 	beam_off()
-	modulate = color
+
+
+func power_on() -> void:
+	if beam.visible:
+		return
+	beam_on()
+	var collider := beam.get_collider()
+	if collider is Relay:
+		collider.power_on()
 
 
 func move(offset: Vector2) -> bool:
@@ -41,7 +42,9 @@ func move(offset: Vector2) -> bool:
 
 func beam_on() -> void:
 	beam.visible = true
+	modulate = on_color
 
 
 func beam_off() -> void:
 	beam.visible = false
+	modulate = off_color

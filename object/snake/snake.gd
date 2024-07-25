@@ -24,25 +24,25 @@ func _physics_process(_delta: float) -> void:
 	if not alive:
 		return
 
-	# if Input.is_action_just_pressed("up", true):
-	# 	move(Vector2.UP * tile_size)
-	# 	tick_timer.start(slow_tick)
-	# 	return
+	if Input.is_action_just_pressed("up", true):
+		move(Vector2.UP * tile_size)
+		tick_timer.start(slow_tick)
+		return
 
-	# if Input.is_action_just_pressed("down", true):
-	# 	move(Vector2.DOWN * tile_size)
-	# 	tick_timer.start(slow_tick)
-	# 	return
+	if Input.is_action_just_pressed("down", true):
+		move(Vector2.DOWN * tile_size)
+		tick_timer.start(slow_tick)
+		return
 
-	# if Input.is_action_just_pressed("left", true):
-	# 	move(Vector2.LEFT * tile_size)
-	# 	tick_timer.start(slow_tick)
-	# 	return
+	if Input.is_action_just_pressed("left", true):
+		move(Vector2.LEFT * tile_size)
+		tick_timer.start(slow_tick)
+		return
 
-	# if Input.is_action_just_pressed("right", true):
-	# 	move(Vector2.RIGHT * tile_size)
-	# 	tick_timer.start(slow_tick)
-	# 	return
+	if Input.is_action_just_pressed("right", true):
+		move(Vector2.RIGHT * tile_size)
+		tick_timer.start(slow_tick)
+		return
 
 	if tick_timer.is_stopped():
 		if Input.is_action_pressed("up", true):
@@ -57,7 +57,7 @@ func _physics_process(_delta: float) -> void:
 		elif Input.is_action_pressed("right", true):
 			move(Vector2.RIGHT * tile_size)
 
-		# tick_timer.start(fast_tick)
+		tick_timer.start(fast_tick)
 
 
 func move(offset: Vector2) -> bool:

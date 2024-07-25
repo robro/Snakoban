@@ -9,6 +9,12 @@ func _ready() -> void:
 	modulate = color
 
 
+func _process(_delta: float) -> void:
+	var collider := beam.get_collider()
+	if collider is Relay:
+		collider.power_on()
+
+
 func move(offset: Vector2) -> bool:
 	var query := PhysicsRayQueryParameters2D.create(
 		position,

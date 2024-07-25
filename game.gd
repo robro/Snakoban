@@ -16,15 +16,20 @@ const lose_flash_tick := 0.1
 const reset_wait_time := 1.0
 
 enum Layer {
+	DYNAMIC,
+	STATIC,
+}
+
+enum Id {
 	SNAKE,
 	SPRITE,
-	STATIC,
+	WALLS
 }
 
 
 func _ready() -> void:
-	var snake_part_positions := grid.get_used_cells(Layer.SNAKE)
-	var sprite_positions := grid.get_used_cells(Layer.SPRITE)
+	var snake_part_positions := grid.get_used_cells_by_id(Layer.DYNAMIC, Id.SNAKE)
+	var sprite_positions := grid.get_used_cells_by_id(Layer.DYNAMIC, Id.SPRITE)
 
 	snake = snake_scene.instantiate()
 	snake.connect("died", _on_snake_died)
@@ -33,7 +38,7 @@ func _ready() -> void:
 		snake.append_body_part(point * tile_size + Vector2i.ONE * tile_size / 2)
 
 	for point in sprite_positions:
-		var tile_data := grid.get_cell_tile_data(Layer.SPRITE, point)
+		var tile_data : TileData = grid.get_cell_tile_data(Layer.DYNAMIC, point)
 		var rotation_index : int = tile_data.get_custom_data("RotationIndex")
 		var scene_path : String = tile_data.get_custom_data("ScenePath")
 		var packed_scene : PackedScene = load(scene_path)
@@ -49,8 +54,7 @@ func _ready() -> void:
 
 	win_state.connect("state_entered", _on_win_state_entered)
 	lose_state.connect("state_entered", _on_lose_state_entered)
-	grid.clear_layer(Layer.SNAKE)
-	grid.clear_layer(Layer.SPRITE)
+	grid.clear_layer(Layer.DYNAMIC)
 
 
 func _input(event: InputEvent) -> void:
