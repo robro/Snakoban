@@ -13,7 +13,6 @@ config_version=5
 config/name="Snakoban"
 run/main_scene="res://scene/level_template.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
-run/max_fps=60
 config/icon="res://icon.svg"
 
 [debug]
@@ -71,11 +70,6 @@ reset={
 2d_physics/layer_3="Food"
 2d_physics/layer_4="Movable"
 2d_physics/layer_5="Beam"
-
-[physics]
-
-common/physics_ticks_per_second=120
-common/physics_jitter_fix=0.0
 
 [rendering]
 
