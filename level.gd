@@ -8,7 +8,7 @@ extends Node2D
 var snake : Snake
 var food_count := 0
 var flash_timer := Timer.new()
-var reset_timer := Timer.new()
+var wait_timer := Timer.new()
 const snake_scene : PackedScene = preload("res://object/snake/snake.tscn")
 const tile_size := 8
 const win_flash_tick := 0.1
@@ -75,40 +75,43 @@ func _on_food_eaten() -> void:
 func _on_loseState_entered() -> void:
 	flash_timer.wait_time = lose_flash_tick
 	flash_timer.autostart = true
-	flash_timer.connect("timeout", _on_lose_timer_timeout)
+	flash_timer.connect("timeout", _on_loseTimer_timeout)
 	add_child(flash_timer)
 
-	reset_timer.wait_time = reset_wait_time
-	reset_timer.autostart = true
-	reset_timer.connect("timeout", _on_reset_timer_timeout)
-	add_child(reset_timer)
+	wait_timer.wait_time = reset_wait_time
+	wait_timer.autostart = true
+	wait_timer.connect("timeout", _on_waitTimer_timeout)
+	add_child(wait_timer)
 
-	# snake.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 	snake.alive = false
 
 
-func _on_lose_timer_timeout() -> void:
+func _on_loseTimer_timeout() -> void:
 	snake.visible = false if snake.visible else true
 
 
 func _on_winState_entered() -> void:
 	flash_timer.wait_time = win_flash_tick
 	flash_timer.autostart = true
-	flash_timer.connect("timeout", _on_win_timer_timeout)
+	flash_timer.connect("timeout", _on_winTimer_timeout)
 	add_child(flash_timer)
 
-	reset_timer.wait_time = reset_wait_time
-	reset_timer.autostart = true
-	reset_timer.connect("timeout", _on_reset_timer_timeout)
-	add_child(reset_timer)
+	wait_timer.wait_time = reset_wait_time
+	wait_timer.autostart = true
+	wait_timer.connect("timeout", _on_waitTimer_timeout)
+	add_child(wait_timer)
 
-	# snake.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 	snake.alive = false
 
 
-func _on_win_timer_timeout() -> void:
+func _on_winTimer_timeout() -> void:
 	snake.modulate = Color.WHITE if snake.modulate == snake.color else snake.color
 
 
-func _on_reset_timer_timeout() -> void:
-	get_tree().reload_current_scene()
+func _on_waitTimer_timeout() -> void:
+	if win_state.active:
+		Levels.curr_level_idx += 1
+		Levels.curr_level_idx %= Levels.level_paths.size()
+		get_tree().change_scene_to_file(Levels.level_paths[Levels.curr_level_idx])
+	else:
+		get_tree().reload_current_scene()

@@ -1,22 +1,22 @@
-[gd_scene load_steps=7 format=3 uid="uid://bgapuybf6it5w"]
+[gd_scene load_steps=7 format=3 uid="uid://n8cblyx1vev5"]
 
-[ext_resource type="Script" path="res://level.gd" id="1_xil76"]
-[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="2_2nbgp"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="3_ystfo"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_4inxj"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_i0a0s"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_dwxd1"]
+[ext_resource type="Script" path="res://level.gd" id="1_v6ypp"]
+[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="2_asi4u"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="3_p3qpj"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_1n0gt"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_j1kgo"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_0qct7"]
 
 [node name="Level" type="Node2D" node_paths=PackedStringArray("state_chart", "win_state", "lose_state", "grid")]
 texture_filter = 1
-script = ExtResource("1_xil76")
+script = ExtResource("1_v6ypp")
 state_chart = NodePath("StateChart")
 win_state = NodePath("StateChart/Root/Win")
 lose_state = NodePath("StateChart/Root/Lose")
 grid = NodePath("Grid")
 
 [node name="Grid" type="TileMap" parent="."]
-tile_set = ExtResource("2_2nbgp")
+tile_set = ExtResource("2_asi4u")
 format = 2
 layer_0/name = "Dynamic"
 layer_0/tile_data = PackedInt32Array(524293, 65537, 2, 720901, 1, 2, 327690, 65537, 2, 524298, 131073, 2, 720906, 1, 0, 262149, 1, 1, 196613, 196608, 0, 131077, 196608, 0, 65541, 196608, 0)
@@ -30,29 +30,29 @@ offset_bottom = 128.0
 color = Color(0, 0, 0, 1)
 
 [node name="StateChart" type="Node" parent="."]
-script = ExtResource("3_ystfo")
+script = ExtResource("3_p3qpj")
 
 [node name="Root" type="Node" parent="StateChart"]
-script = ExtResource("4_4inxj")
+script = ExtResource("4_1n0gt")
 initial_state = NodePath("Gameplay")
 
 [node name="Gameplay" type="Node" parent="StateChart/Root"]
-script = ExtResource("5_i0a0s")
+script = ExtResource("5_j1kgo")
 
 [node name="toWin" type="Node" parent="StateChart/Root/Gameplay"]
-script = ExtResource("6_dwxd1")
+script = ExtResource("6_0qct7")
 to = NodePath("../../Win")
 event = &"won"
 delay_in_seconds = "0.0"
 
 [node name="toLose" type="Node" parent="StateChart/Root/Gameplay"]
-script = ExtResource("6_dwxd1")
+script = ExtResource("6_0qct7")
 to = NodePath("../../Lose")
 event = &"lost"
 delay_in_seconds = "0.0"
 
 [node name="Win" type="Node" parent="StateChart/Root"]
-script = ExtResource("5_i0a0s")
+script = ExtResource("5_j1kgo")
 
 [node name="Lose" type="Node" parent="StateChart/Root"]
-script = ExtResource("5_i0a0s")
+script = ExtResource("5_j1kgo")

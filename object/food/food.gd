@@ -11,6 +11,10 @@ var edible := true:
 signal eaten
 
 
+func _ready() -> void:
+	edible = true
+
+
 func _physics_process(_delta: float) -> void:
 	edible = true
 
