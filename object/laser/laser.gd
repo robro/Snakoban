@@ -1,18 +1,18 @@
 class_name Laser
 extends Area2D
 
+@export var color := Color.PURPLE
 @export var beam : Beam
-var color := Color.PURPLE
 
 
 func _ready() -> void:
 	modulate = color
 
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	var collider := beam.get_collider()
 	if collider is Relay:
-		collider.power_on()
+		collider.power()
 
 
 func move(offset: Vector2) -> bool:

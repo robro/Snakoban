@@ -3,20 +3,19 @@
 [ext_resource type="SpriteFrames" uid="uid://oio25nkve24h" path="res://object/laser/beam_frames.tres" id="1_o4qj0"]
 [ext_resource type="Script" path="res://object/laser/beam.gd" id="1_tp3mq"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_fnq6b"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_o5oej"]
 viewport_path = NodePath("BeamViewport")
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_emfd8"]
 resource_local_to_scene = true
 b = Vector2(8, 0)
 
-[node name="Beam" type="Node2D" node_paths=PackedStringArray("probe", "beam_texture", "beam_area", "beam_collision")]
-process_priority = -1
+[node name="Beam" type="Node2D" node_paths=PackedStringArray("probe", "beam_texture", "beam_collision")]
+process_physics_priority = 1
 texture_filter = 1
 script = ExtResource("1_tp3mq")
 probe = NodePath("Probe")
 beam_texture = NodePath("BeamTexture")
-beam_area = NodePath("BeamArea")
 beam_collision = NodePath("BeamArea/Collision")
 
 [node name="Probe" type="RayCast2D" parent="."]
@@ -36,13 +35,16 @@ offset_right = 12.0
 offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("ViewportTexture_fnq6b")
+texture = SubResource("ViewportTexture_o5oej")
 expand_mode = 1
 stretch_mode = 1
 
 [node name="BeamViewport" type="SubViewport" parent="."]
 transparent_bg = true
+canvas_item_default_texture_filter = 0
+canvas_item_default_texture_repeat = 1
 size = Vector2i(8, 8)
+render_target_update_mode = 4
 
 [node name="BeamAnimation" type="AnimatedSprite2D" parent="BeamViewport"]
 position = Vector2(4, 4)
@@ -51,6 +53,7 @@ autoplay = "default"
 frame_progress = 0.638147
 
 [node name="BeamArea" type="Area2D" parent="."]
+process_priority = 3
 position = Vector2(5, 0)
 collision_layer = 16
 collision_mask = 2

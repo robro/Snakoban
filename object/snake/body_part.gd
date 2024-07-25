@@ -11,38 +11,31 @@ signal hurt
 
 
 func _ready() -> void:
-	collision.connect("area_entered", _on_area_entered)
-	update_rotation()
 	update_animation()
-
-
-func _on_area_entered(area: Area2D) -> void:
-	if area.get_collision_layer_value(5) and area.is_visible_in_tree():
-		emit_signal("hurt")
-		return
 
 
 func _physics_process(_delta: float) -> void:
-	update_rotation()
-	update_animation()
+	for area in collision.get_overlapping_areas():
+		if area.get_collision_layer_value(5):
+			emit_signal("hurt")
+			return
 
 
-func update_position(_position: Vector2) -> void:
+func update_position(new_position: Vector2) -> void:
 	prev_pos = position
-	position = _position
+	position = new_position
 
 	if next_part:
 		next_part.update_position(prev_pos)
 
 
-func update_rotation() -> void:
+func update_animation() -> void:
 	if next_part:
 		rotation = next_part.position.angle_to_point(position)
+
 	elif prev_part:
 		rotation = position.angle_to_point(prev_part.position)
 
-
-func update_animation() -> void:
 	if not prev_part:
 		sprite.animation = "head"
 
@@ -58,3 +51,6 @@ func update_animation() -> void:
 			sprite.flip_v = true
 		else:
 			sprite.flip_v = false
+
+	if next_part:
+		next_part.update_animation()

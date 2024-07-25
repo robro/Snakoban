@@ -8,6 +8,7 @@
 size = Vector2(8, 8)
 
 [node name="Relay" type="Area2D" node_paths=PackedStringArray("beam")]
+process_physics_priority = -1
 texture_filter = 1
 collision_layer = 8
 collision_mask = 16
@@ -25,3 +26,4 @@ shape = SubResource("RectangleShape2D_mfved")
 debug_color = Color(0, 0.596948, 0.717242, 0.42)
 
 [node name="Beam" parent="." instance=ExtResource("3_2ooo8")]
+process_priority = -1

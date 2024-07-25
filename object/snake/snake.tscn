@@ -3,5 +3,5 @@
 [ext_resource type="Script" path="res://object/snake/snake.gd" id="1_ns4pl"]
 
 [node name="Snake" type="Node2D"]
-process_priority = -1
+process_physics_priority = -10
 script = ExtResource("1_ns4pl")

@@ -1,28 +1,28 @@
 class_name Relay
 extends Area2D
 
+@export var idle_color := Color.DIM_GRAY
+@export var powered_color := Color.PURPLE
 @export var beam : Beam
-const off_color := Color.DIM_GRAY
-const on_color := Color.PURPLE
 
 
 func _ready() -> void:
-	modulate = off_color
+	modulate = idle_color
 	beam_off()
 
 
 func _physics_process(_delta: float) -> void:
-	modulate = off_color
 	beam_off()
 
 
-func power_on() -> void:
-	if beam.visible:
+func power() -> void:
+	if beam.enabled:
 		return
+
 	beam_on()
 	var collider := beam.get_collider()
 	if collider is Relay:
-		collider.power_on()
+		collider.power()
 
 
 func move(offset: Vector2) -> bool:
@@ -41,10 +41,10 @@ func move(offset: Vector2) -> bool:
 
 
 func beam_on() -> void:
-	beam.visible = true
-	modulate = on_color
+	beam.enabled = true
+	modulate = powered_color
 
 
 func beam_off() -> void:
-	beam.visible = false
-	modulate = off_color
+	beam.enabled = false
+	modulate = idle_color

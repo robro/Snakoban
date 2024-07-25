@@ -74,12 +74,13 @@ func move(offset: Vector2) -> bool:
 	if result:
 		var collider : Node2D = result["collider"]
 		if (collider is TileMap or
-			collider.get_parent() is BodyPart or
+			collider.get_collision_layer_value(2) or
 			collider.get_collision_layer_value(4) and not collider.move(offset)
 		):
 			return false
 
 	head.update_position(head.position + offset)
+	head.update_animation()
 	return true
 
 
@@ -92,7 +93,6 @@ func append_body_part(point: Vector2) -> void:
 	if tail:
 		tail.next_part = new_part
 		new_part.prev_part = tail
-		tail.update_rotation()
 		tail.update_animation()
 		tail = new_part
 	else:
@@ -103,8 +103,8 @@ func append_body_part(point: Vector2) -> void:
 
 func _on_mouth_entered(area: Area2D) -> void:
 	if area is Food:
-		append_body_part(tail.prev_pos)
 		area.eat()
+		append_body_part(tail.prev_pos)
 
 
 func _on_bodyPart_hurt() -> void:
