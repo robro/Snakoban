@@ -15,14 +15,18 @@ func _physics_process(_delta: float) -> void:
 	beam_off()
 
 
-func power() -> void:
+func power(from: Node2D) -> void:
 	if beam.enabled:
+		return
+
+	if is_equal_approx(abs(angle_difference(rotation, from.rotation)), PI):
+		modulate = powered_color
 		return
 
 	beam_on()
 	var collider := beam.get_collider()
 	if collider is Relay:
-		collider.power()
+		collider.power(self)
 
 
 func move(offset: Vector2) -> bool:

@@ -12,7 +12,7 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	var collider := beam.get_collider()
 	if collider is Relay:
-		collider.power()
+		collider.power(self)
 
 
 func move(offset: Vector2) -> bool:
