@@ -52,8 +52,8 @@ func _ready() -> void:
 
 	assert(food_count > 0, "scene must have food")
 
-	win_state.connect("state_entered", _on_win_state_entered)
-	lose_state.connect("state_entered", _on_lose_state_entered)
+	win_state.connect("state_entered", _on_winState_entered)
+	lose_state.connect("state_entered", _on_loseState_entered)
 	grid.clear_layer(Layer.DYNAMIC)
 
 
@@ -72,7 +72,7 @@ func _on_food_eaten() -> void:
 		state_chart.send_event("won")
 
 
-func _on_lose_state_entered() -> void:
+func _on_loseState_entered() -> void:
 	flash_timer.wait_time = lose_flash_tick
 	flash_timer.autostart = true
 	flash_timer.connect("timeout", _on_lose_timer_timeout)
@@ -83,12 +83,15 @@ func _on_lose_state_entered() -> void:
 	reset_timer.connect("timeout", _on_reset_timer_timeout)
 	add_child(reset_timer)
 
+	# snake.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
+	snake.alive = false
+
 
 func _on_lose_timer_timeout() -> void:
 	snake.visible = false if snake.visible else true
 
 
-func _on_win_state_entered() -> void:
+func _on_winState_entered() -> void:
 	flash_timer.wait_time = win_flash_tick
 	flash_timer.autostart = true
 	flash_timer.connect("timeout", _on_win_timer_timeout)
@@ -99,6 +102,7 @@ func _on_win_state_entered() -> void:
 	reset_timer.connect("timeout", _on_reset_timer_timeout)
 	add_child(reset_timer)
 
+	# snake.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 	snake.alive = false
 
 

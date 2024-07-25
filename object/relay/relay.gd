@@ -7,7 +7,6 @@ extends Area2D
 
 
 func _ready() -> void:
-	modulate = idle_color
 	beam_off()
 
 
@@ -19,7 +18,7 @@ func power(from: Node2D) -> void:
 	if beam.enabled:
 		return
 
-	if is_equal_approx(abs(angle_difference(rotation, from.rotation)), PI):
+	if is_equal_approx(abs(angle_difference(global_rotation, from.global_rotation)), PI):
 		modulate = powered_color
 		return
 

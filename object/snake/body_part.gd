@@ -11,14 +11,19 @@ signal hurt
 
 
 func _ready() -> void:
+	collision.connect("area_entered", _on_area_entered)
 	update_animation()
 
 
-func _physics_process(_delta: float) -> void:
-	for area in collision.get_overlapping_areas():
-		if area.get_collision_layer_value(5):
-			emit_signal("hurt")
-			return
+# func _physics_process(_delta: float) -> void:
+# 	for area in collision.get_overlapping_areas():
+# 		if area.get_collision_layer_value(5):
+# 			emit_signal("hurt")
+# 			return
+
+func _on_area_entered(area: Area2D) -> void:
+	if area.get_collision_layer_value(5):
+		emit_signal("hurt")
 
 
 func update_position(new_position: Vector2) -> void:

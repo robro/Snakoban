@@ -21,9 +21,6 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if not alive:
-		return
-
 	if Input.is_action_just_pressed("up", true):
 		move(Vector2.UP * tile_size)
 		tick_timer.start(slow_tick)
@@ -61,6 +58,9 @@ func _physics_process(_delta: float) -> void:
 
 
 func move(offset: Vector2) -> bool:
+	if not alive:
+		return false
+
 	if head == null:
 		return false
 
@@ -98,15 +98,17 @@ func append_body_part(point: Vector2) -> void:
 	else:
 		head = new_part
 		tail = new_part
-		head.collision.connect("area_entered", _on_mouth_entered)
+		head.collision.connect("area_entered", _on_head_entered)
 
 
-func _on_mouth_entered(area: Area2D) -> void:
+func _on_head_entered(area: Area2D) -> void:
 	if area is Food:
+		if area.edible:
+			append_body_part(tail.prev_pos)
+		else:
+			emit_signal("died")
 		area.eat()
-		append_body_part(tail.prev_pos)
 
 
 func _on_bodyPart_hurt() -> void:
-	alive = false
 	emit_signal("died")

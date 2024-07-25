@@ -23,6 +23,9 @@ func set_beam_length() -> void:
 		if collider:
 			beam_length = int((probe.global_position - probe.get_collision_point()).length() / 8) * 8
 
+			if collider is Food:
+				collider.edible = false
+
 	beam_texture.size.x = beam_length
 	beam_collision.shape.b.x = beam_length
 

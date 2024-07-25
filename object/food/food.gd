@@ -1,13 +1,18 @@
 class_name Food
 extends Area2D
 
-const color := Color.DEEP_PINK
+const edible_color := Color.DEEP_PINK
+const inedible_color := Color.PURPLE
+var edible := true:
+	set(v):
+		edible = v
+		modulate = edible_color if edible else inedible_color
 
 signal eaten
 
 
-func _ready() -> void:
-	modulate = color
+func _physics_process(_delta: float) -> void:
+	edible = true
 
 
 func eat() -> void:
