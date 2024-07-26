@@ -81,6 +81,7 @@ func move(offset: Vector2) -> bool:
 
 	head.update_position(head.position + offset)
 	head.update_animation()
+	Events.move.emit()
 	return true
 
 
