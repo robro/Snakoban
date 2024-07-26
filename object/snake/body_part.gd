@@ -15,12 +15,6 @@ func _ready() -> void:
 	update_animation()
 
 
-# func _physics_process(_delta: float) -> void:
-# 	for area in collision.get_overlapping_areas():
-# 		if area.get_collision_layer_value(5):
-# 			emit_signal("hurt")
-# 			return
-
 func _on_area_entered(area: Area2D) -> void:
 	if area.get_collision_layer_value(5):
 		emit_signal("hurt")
@@ -41,6 +35,8 @@ func update_animation() -> void:
 	elif prev_part:
 		rotation = position.angle_to_point(prev_part.position)
 
+	sprite.rotation = 0
+
 	if not prev_part:
 		sprite.animation = "head"
 
@@ -53,9 +49,7 @@ func update_animation() -> void:
 	else:
 		sprite.animation = "bent"
 		if angle_difference(rotation, prev_part.rotation) > 0:
-			sprite.flip_v = true
-		else:
-			sprite.flip_v = false
+			sprite.rotation = -PI / 2
 
 	if next_part:
 		next_part.update_animation()
