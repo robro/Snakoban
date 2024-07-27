@@ -87,8 +87,8 @@ func move(offset: Vector2) -> bool:
 
 func append_body_part(point: Vector2) -> void:
 	var new_part := body_part.instantiate()
-	call_deferred("add_child", new_part)
-	new_part.connect("hurt", _on_bodyPart_hurt)
+	add_child.call_deferred(new_part)
+	new_part.hurt.connect(_on_bodyPart_hurt)
 	new_part.position = point
 
 	if tail:
@@ -99,7 +99,7 @@ func append_body_part(point: Vector2) -> void:
 	else:
 		head = new_part
 		tail = new_part
-		head.collision.connect("area_entered", _on_head_entered)
+		head.collision.area_entered.connect(_on_head_entered)
 
 
 func _on_head_entered(area: Area2D) -> void:

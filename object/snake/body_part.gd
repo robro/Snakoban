@@ -11,7 +11,7 @@ signal hurt
 
 
 func _ready() -> void:
-	collision.connect("area_entered", _on_area_entered)
+	collision.area_entered.connect(_on_area_entered)
 	update_animation()
 
 

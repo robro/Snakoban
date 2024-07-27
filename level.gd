@@ -31,7 +31,7 @@ func _ready() -> void:
 	var sprite_positions := grid.get_used_cells_by_id(Layer.DYNAMIC, Id.SPRITE)
 
 	snake = snake_scene.instantiate()
-	snake.connect("died", _on_snake_died)
+	snake.died.connect(_on_snake_died)
 	add_child(snake)
 	for point in snake_part_positions:
 		snake.append_body_part(point * tile_size + Vector2i.ONE * tile_size / 2)
@@ -42,17 +42,17 @@ func _ready() -> void:
 		var scene_path : String = tile_data.get_custom_data("ScenePath")
 		var packed_scene : PackedScene = load(scene_path)
 		var scene_instance : Node2D = packed_scene.instantiate()
-		add_child(scene_instance)
+		add_child.call_deferred(scene_instance)
 		scene_instance.position = point * tile_size + Vector2i.ONE * tile_size / 2
 		scene_instance.rotation = rotation_index * (PI / 2)
 		if scene_instance is Food:
 			food_count += 1
-			scene_instance.connect("eaten", _on_food_eaten)
+			scene_instance.eaten.connect(_on_food_eaten)
 
 	assert(food_count > 0, "scene must have food")
 
-	win_state.connect("state_entered", _on_winState_entered)
-	lose_state.connect("state_entered", _on_loseState_entered)
+	win_state.state_entered.connect(_on_winState_entered)
+	lose_state.state_entered.connect(_on_loseState_entered)
 	grid.clear_layer(Layer.DYNAMIC)
 
 
@@ -75,7 +75,7 @@ func _on_food_eaten() -> void:
 func _on_loseState_entered() -> void:
 	flash_timer.wait_time = lose_flash_tick
 	flash_timer.autostart = true
-	flash_timer.connect("timeout", _on_loseFlash_timeout)
+	flash_timer.timeout.connect(_on_loseFlash_timeout)
 	add_child(flash_timer)
 
 	snake.alive = false
@@ -90,7 +90,7 @@ func _on_loseFlash_timeout() -> void:
 func _on_winState_entered() -> void:
 	flash_timer.wait_time = win_flash_tick
 	flash_timer.autostart = true
-	flash_timer.connect("timeout", _on_winFlash_timeout)
+	flash_timer.timeout.connect(_on_winFlash_timeout)
 	add_child(flash_timer)
 
 	snake.alive = false
