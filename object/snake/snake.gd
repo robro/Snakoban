@@ -5,11 +5,22 @@ const color : Color = Color.FOREST_GREEN
 const tile_size : int = 8
 const slow_tick := 0.4
 const fast_tick := 0.1
-var body_part : PackedScene = preload("res://object/snake/body_part.tscn")
-var head : BodyPart
-var tail : BodyPart
 var tick_timer := Timer.new()
 var alive := true
+var grid : Grid = preload("res://object/grid.tres")
+var body_part : PackedScene = preload("res://object/snake/body_part.tscn")
+var parts : Array[BodyPart]
+var head : BodyPart :
+	get:
+		if parts.is_empty():
+			return null
+		return parts[0]
+
+var tail : BodyPart :
+	get:
+		if parts.is_empty():
+			return null
+		return parts[-1]
 
 signal died
 
@@ -22,90 +33,72 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("up", true):
-		move(Vector2.UP * tile_size)
+		move(Vector2.UP)
 		tick_timer.start(slow_tick)
 		return
 
 	if Input.is_action_just_pressed("down", true):
-		move(Vector2.DOWN * tile_size)
+		move(Vector2.DOWN)
 		tick_timer.start(slow_tick)
 		return
 
 	if Input.is_action_just_pressed("left", true):
-		move(Vector2.LEFT * tile_size)
+		move(Vector2.LEFT)
 		tick_timer.start(slow_tick)
 		return
 
 	if Input.is_action_just_pressed("right", true):
-		move(Vector2.RIGHT * tile_size)
+		move(Vector2.RIGHT)
 		tick_timer.start(slow_tick)
 		return
 
 	if tick_timer.is_stopped():
 		if Input.is_action_pressed("up", true):
-			move(Vector2.UP * tile_size)
+			move(Vector2.UP)
 
 		elif Input.is_action_pressed("down", true):
-			move(Vector2.DOWN * tile_size)
+			move(Vector2.DOWN)
 
 		elif Input.is_action_pressed("left", true):
-			move(Vector2.LEFT * tile_size)
+			move(Vector2.LEFT)
 
 		elif Input.is_action_pressed("right", true):
-			move(Vector2.RIGHT * tile_size)
+			move(Vector2.RIGHT)
 
 		tick_timer.start(fast_tick)
 
 
-func move(offset: Vector2) -> bool:
+func move(direction: Vector2i) -> bool:
 	if not alive:
 		return false
-
 	if head == null:
 		return false
-
-	var query := PhysicsRayQueryParameters2D.create(
-		head.position,
-		head.position + offset,
-		15,
-	)
-	query.collide_with_areas = true
-	var result := get_world_2d().direct_space_state.intersect_ray(query)
-	if result:
-		var collider : Node2D = result["collider"]
-		if (collider is TileMap or
-			collider.get_collision_layer_value(2) or
-			collider.get_collision_layer_value(4) and not collider.move(offset)
-		):
-			return false
-
-	head.update_position(head.position + offset)
+	if not head.move(head.grid_coord + direction, direction):
+		return false
 	head.update_animation()
 	Events.move.emit()
 	return true
 
 
-func append_body_part(point: Vector2) -> void:
+func append_body_part(coord: Vector2i) -> void:
 	var new_part := body_part.instantiate()
 	add_child.call_deferred(new_part)
 	new_part.hurt.connect(_on_bodyPart_hurt)
-	new_part.position = point
+	new_part.grid_coord = coord
 
-	if tail:
+	if parts.is_empty():
+		new_part.collision.area_entered.connect(_on_head_entered)
+	else:
 		tail.next_part = new_part
 		new_part.prev_part = tail
-		tail.update_animation()
-		tail = new_part
-	else:
-		head = new_part
-		tail = new_part
-		head.collision.area_entered.connect(_on_head_entered)
+
+	parts.append(new_part)
 
 
 func _on_head_entered(area: Area2D) -> void:
 	if area is Food:
 		if area.edible:
-			append_body_part(tail.prev_pos)
+			append_body_part(tail.prev_coord)
 		else:
 			emit_signal("died")
 		area.eat()
