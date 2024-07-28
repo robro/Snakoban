@@ -1,9 +1,10 @@
 extends Node2D
 
-@export var state_chart: StateChart
-@export var win_state : StateChartState
-@export var lose_state : StateChartState
-@export var grid: TileMap
+@onready var state_chart : StateChart = %"Level State"
+@onready var win_state : StateChartState = %Win
+@onready var lose_state : StateChartState = %Lose
+@onready var level_map : TileMap = %"Level Map"
+var grid : Grid = preload("res://object/grid.tres")
 
 var snake : Snake
 var food_count := 0
@@ -15,45 +16,37 @@ const lose_flash_tick := 0.1
 const reset_wait_time := 1.0
 
 enum Layer {
-	DYNAMIC,
-	STATIC,
+	SNAKE,
+	WALLS,
 }
 
-enum Id {
-	SNAKE,
-	SPRITE,
-	WALLS
-}
+func _init() -> void:
+	grid.clear()
 
 
 func _ready() -> void:
-	var snake_part_positions := grid.get_used_cells_by_id(Layer.DYNAMIC, Id.SNAKE)
-	var sprite_positions := grid.get_used_cells_by_id(Layer.DYNAMIC, Id.SPRITE)
+	var wall_coords := level_map.get_used_cells(Layer.WALLS)
+	for coord in wall_coords:
+		grid.set_cell(coord, true)
 
+	var snake_coords := level_map.get_used_cells_by_id(Layer.SNAKE)
 	snake = snake_scene.instantiate()
 	snake.died.connect(_on_snake_died)
-	add_child(snake)
-	for point in snake_part_positions:
-		snake.append_body_part(point * tile_size + Vector2i.ONE * tile_size / 2)
+	add_child.call_deferred(snake)
+	for coord in snake_coords:
+		snake.append_body_part(coord)
 
-	for point in sprite_positions:
-		var tile_data : TileData = grid.get_cell_tile_data(Layer.DYNAMIC, point)
-		var rotation_index : int = tile_data.get_custom_data("RotationIndex")
-		var scene_path : String = tile_data.get_custom_data("ScenePath")
-		var packed_scene : PackedScene = load(scene_path)
-		var scene_instance : Node2D = packed_scene.instantiate()
-		add_child.call_deferred(scene_instance)
-		scene_instance.position = point * tile_size + Vector2i.ONE * tile_size / 2
-		scene_instance.rotation = rotation_index * (PI / 2)
-		if scene_instance is Food:
-			food_count += 1
-			scene_instance.eaten.connect(_on_food_eaten)
+	assert(snake.parts.size() >= 2, "Invalid snake size: " + str(snake.parts.size()))
 
-	assert(food_count > 0, "scene must have food")
+	for food : Food in get_children().filter(func(n: Node) -> bool: return n is Food):
+		food_count += 1
+		food.eaten.connect(_on_food_eaten)
+
+	assert(food_count >= 1, "Level must have food!")
 
 	win_state.state_entered.connect(_on_winState_entered)
 	lose_state.state_entered.connect(_on_loseState_entered)
-	grid.clear_layer(Layer.DYNAMIC)
+	level_map.clear_layer(Layer.SNAKE)
 
 
 func _input(event: InputEvent) -> void:
@@ -69,7 +62,7 @@ func _on_food_eaten() -> void:
 	food_count -= 1
 	assert(food_count >= 0, "can't have negative food!")
 	if food_count == 0:
-		state_chart.send_event("won")
+		state_chart.send_event.call_deferred("won")
 
 
 func _on_loseState_entered() -> void:
@@ -79,6 +72,7 @@ func _on_loseState_entered() -> void:
 	add_child(flash_timer)
 
 	snake.alive = false
+	snake.modulate = Color.PURPLE
 	await get_tree().create_timer(reset_wait_time).timeout
 	get_tree().reload_current_scene()
 

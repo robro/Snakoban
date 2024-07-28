@@ -1,30 +1,41 @@
 class_name Laser
-extends Area2D
+extends GridObject
 
-@export var color := Color.PURPLE
-@export var beam : Beam
+var beaming : Variant
+@onready var beam : Beam = %Beam
 
 
 func _ready() -> void:
-	modulate = color
+	super._ready()
+	pushable = true
+	grid.updated.connect(_on_grid_updated)
+	update_beam.call_deferred()
 
 
-func _physics_process(_delta: float) -> void:
-	var collider := beam.get_collider()
-	if collider is Relay:
-		collider.power(self)
+func update_beam() -> void:
+	if beaming is Relay:
+		beaming.disconnect_from([self] as Array[Laser])
+	elif beaming is Food:
+		beaming.edible = true
+	beaming = null
+
+	var beam_size := 0
+	var direction := Vector2i(Vector2.from_angle(rotation))
+	var cell : Variant = null
+	while cell == null:
+		cell = grid.get_cell(grid_coord + direction * (beam_size + 1))
+		if cell:
+			break
+		beam_size += 1
+	if cell is Food:
+		cell.edible = false
+	elif cell is BodyPart:
+		cell.hurt.emit()
+	elif cell is Relay:
+		cell.connect_to([self] as Array[Laser])
+	beaming = cell
+	beam.beam_texture.size.x = beam_size * grid.cell_size
 
 
-func move(offset: Vector2) -> bool:
-	var query := PhysicsRayQueryParameters2D.create(
-		position,
-		position + offset,
-		0b1111,
-	)
-	query.collide_with_areas = true
-	var result := get_world_2d().direct_space_state.intersect_ray(query)
-	if result:
-		return false
-
-	position += offset
-	return true
+func _on_grid_updated() -> void:
+	update_beam()

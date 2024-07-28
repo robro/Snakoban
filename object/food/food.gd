@@ -1,8 +1,8 @@
 class_name Food
-extends Area2D
+extends GridObject
 
-const edible_color := Color.DEEP_PINK
-const inedible_color := Color.PURPLE
+@export var edible_color := Color.DEEP_PINK
+@export var inedible_color := Color.PURPLE
 var edible := true:
 	set(v):
 		edible = v
@@ -12,13 +12,10 @@ signal eaten
 
 
 func _ready() -> void:
-	edible = true
-
-
-func _physics_process(_delta: float) -> void:
+	super._ready()
 	edible = true
 
 
 func eat() -> void:
-	emit_signal("eaten")
+	eaten.emit()
 	queue_free()
