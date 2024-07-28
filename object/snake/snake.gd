@@ -73,11 +73,23 @@ func move(direction: Vector2i) -> bool:
 		return false
 	if head == null:
 		return false
+	eat_food_at(head.grid_coord + direction)
 	if not head.move(direction):
 		return false
 	head.update_animation()
 	Events.move.emit()
 	return true
+
+
+func eat_food_at(coord: Vector2i) -> void:
+	var cell : Variant = grid.get_cell(coord)
+	if cell is Food:
+		cell.eat()
+		grid.set_cell(coord, null)
+		if cell.edible:
+			append_body_part(tail.prev_coord)
+		else:
+			died.emit()
 
 
 func append_body_part(coord: Vector2) -> void:
@@ -93,14 +105,5 @@ func append_body_part(coord: Vector2) -> void:
 	parts.append(new_part)
 
 
-func _on_head_entered(area: Area2D) -> void:
-	if area is Food:
-		if area.edible:
-			append_body_part(tail.prev_coord)
-		else:
-			emit_signal("died")
-		area.eat()
-
-
 func _on_bodyPart_hurt() -> void:
-	emit_signal("died")
+	died.emit()

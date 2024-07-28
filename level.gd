@@ -26,11 +26,10 @@ func _init() -> void:
 
 func _ready() -> void:
 	var wall_coords := level_map.get_used_cells(Layer.WALLS)
-	var snake_coords := level_map.get_used_cells_by_id(Layer.SNAKE)
-
 	for coord in wall_coords:
 		grid.set_cell(coord, true)
 
+	var snake_coords := level_map.get_used_cells_by_id(Layer.SNAKE)
 	snake = snake_scene.instantiate()
 	snake.died.connect(_on_snake_died)
 	add_child.call_deferred(snake)
@@ -38,6 +37,12 @@ func _ready() -> void:
 		snake.append_body_part(coord)
 
 	assert(snake.parts.size() >= 2, "Invalid snake size: " + str(snake.parts.size()))
+
+	for food : Food in get_children().filter(func(n: Node) -> bool: return n is Food):
+		food_count += 1
+		food.eaten.connect(_on_food_eaten)
+
+	assert(food_count >= 1, "Level must have food!")
 
 	win_state.state_entered.connect(_on_winState_entered)
 	lose_state.state_entered.connect(_on_loseState_entered)
@@ -57,7 +62,7 @@ func _on_food_eaten() -> void:
 	food_count -= 1
 	assert(food_count >= 0, "can't have negative food!")
 	if food_count == 0:
-		state_chart.send_event("won")
+		state_chart.send_event.call_deferred("won")
 
 
 func _on_loseState_entered() -> void:
@@ -70,7 +75,6 @@ func _on_loseState_entered() -> void:
 	snake.modulate = Color.PURPLE
 	await get_tree().create_timer(reset_wait_time).timeout
 	get_tree().reload_current_scene()
-
 
 
 func _on_loseFlash_timeout() -> void:

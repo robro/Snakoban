@@ -4,7 +4,7 @@ extends GridObject
 @export var idle_color := Color.DIM_GRAY
 @export var powered_color := Color.PURPLE
 @export var beam : Beam
-var powering : Relay
+var beaming : Variant
 var power_sources : Array[Laser]
 
 
@@ -22,7 +22,6 @@ func power_on() -> void:
 
 func power_off() -> void:
 	modulate = idle_color
-	powering = null
 	update_beam()
 
 
@@ -40,28 +39,33 @@ func disconnect_from(_power_sources: Array[Laser]) -> void:
 		if laser_idx >= 0:
 			power_sources.remove_at(laser_idx)
 			disconnected = true
-	if powering is Relay and disconnected:
-		powering.disconnect_from(_power_sources)
+	if beaming is Relay and disconnected:
+		beaming.disconnect_from(_power_sources)
+	elif beaming is Food:
+		beaming.edible = true
 	if power_sources.is_empty():
 		power_off()
 
 
 func update_beam() -> void:
+	beaming = null
 	if power_sources.is_empty():
 		beam.beam_texture.size.x = 0
 		return
 
 	var beam_size := 0
 	var direction := Vector2i(Vector2.from_angle(rotation))
-	var curr_cell : Variant
-	while curr_cell == null:
-		curr_cell = grid.get_cell(grid_coord + direction * (beam_size + 1))
-		if curr_cell:
+	var cell : Variant
+	while cell == null:
+		cell = grid.get_cell(grid_coord + direction * (beam_size + 1))
+		if cell:
 			break
 		beam_size += 1
-	if curr_cell is BodyPart:
-		curr_cell.hurt.emit()
-	elif curr_cell is Relay:
-		curr_cell.connect_to(power_sources)
-		powering = curr_cell
+	if cell is Food:
+		cell.edible = false
+	elif cell is BodyPart:
+		cell.hurt.emit()
+	elif cell is Relay:
+		cell.connect_to(power_sources)
+	beaming = cell
 	beam.beam_texture.size.x = beam_size * grid.cell_size

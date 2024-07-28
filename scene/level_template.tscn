@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bgapuybf6it5w"]
+[gd_scene load_steps=10 format=3 uid="uid://bgapuybf6it5w"]
 
 [ext_resource type="Script" path="res://level.gd" id="1_xil76"]
 [ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="2_2nbgp"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_dwxd1"]
 [ext_resource type="PackedScene" uid="uid://bqlopparciepg" path="res://object/laser/laser.tscn" id="7_bgxeh"]
 [ext_resource type="PackedScene" uid="uid://68i7icbm1err" path="res://object/relay/relay.tscn" id="9_a2hux"]
+[ext_resource type="PackedScene" uid="uid://dkh7x0qdxslah" path="res://object/food/food.tscn" id="9_vdtn0"]
 
 [node name="Level" type="Node2D"]
 texture_filter = 1
@@ -60,19 +61,18 @@ unique_name_in_owner = true
 script = ExtResource("5_i0a0s")
 
 [node name="Laser_7" parent="." instance=ExtResource("7_bgxeh")]
-position = Vector2(36, 84)
+position = Vector2(36, 60)
 
-[node name="Relay" parent="." instance=ExtResource("9_a2hux")]
-position = Vector2(68, 84)
+[node name="Food" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(84, 84)
 
-[node name="Relay_2" parent="." instance=ExtResource("9_a2hux")]
-position = Vector2(100, 84)
-rotation = -1.5708
+[node name="Food_2" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(84, 108)
 
-[node name="Relay_3" parent="." instance=ExtResource("9_a2hux")]
-position = Vector2(100, 44)
+[node name="Laser" parent="." instance=ExtResource("7_bgxeh")]
+position = Vector2(108, 84)
 rotation = -3.1416
 
-[node name="Relay_4" parent="." instance=ExtResource("9_a2hux")]
-position = Vector2(68, 44)
+[node name="Relay" parent="." instance=ExtResource("9_a2hux")]
+position = Vector2(84, 60)
 rotation = 1.5708
