@@ -67,8 +67,10 @@ func _on_loseState_entered() -> void:
 	add_child(flash_timer)
 
 	snake.alive = false
+	snake.modulate = Color.PURPLE
 	await get_tree().create_timer(reset_wait_time).timeout
 	get_tree().reload_current_scene()
+
 
 
 func _on_loseFlash_timeout() -> void:

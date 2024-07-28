@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://object/laser/beam.gd" id="1_tp3mq"]
 [ext_resource type="Texture2D" uid="uid://vsyhu8fk1ri1" path="res://object/laser/beam.png" id="2_rcopx"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_6sa7m"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_f8rji"]
 viewport_path = NodePath("SubViewport")
 
 [sub_resource type="Animation" id="Animation_nr2kx"]
@@ -39,10 +39,9 @@ anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_top = -4.0
-offset_right = 32.0
 offset_bottom = 4.0
 grow_vertical = 2
-texture = SubResource("ViewportTexture_6sa7m")
+texture = SubResource("ViewportTexture_f8rji")
 expand_mode = 1
 stretch_mode = 1
 
@@ -55,6 +54,7 @@ texture = ExtResource("2_rcopx")
 centered = false
 hframes = 4
 vframes = 4
+frame = 1
 region_rect = Rect2(0, 0, 32, 32)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewport"]

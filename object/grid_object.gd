@@ -19,7 +19,7 @@ func _ready() -> void:
 func move(direction: Vector2i) -> bool:
 	if grid.get_cell(grid_coord + direction) != null:
 		return false
-	grid.set_cell(grid_coord, null)
 	grid.set_cell(grid_coord + direction, self)
+	grid.set_cell(grid_coord, null)
 	grid_coord += direction
 	return true

@@ -32,6 +32,7 @@ func get_cell(coord: Vector2i) -> Variant:
 func set_cell(coord: Vector2i, value: Variant) -> bool:
 	if shape.has_point(coord):
 		cells[coord.y][coord.x] = value
+		updated.emit()
 		return true
 	return false
 
