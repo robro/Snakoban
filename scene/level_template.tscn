@@ -63,10 +63,10 @@ script = ExtResource("5_i0a0s")
 position = Vector2(44, 36)
 
 [node name="Box" parent="." instance=ExtResource("8_i64id")]
-position = Vector2(36, 84)
+position = Vector2(44, 68)
 
 [node name="Box_2" parent="." instance=ExtResource("8_i64id")]
-position = Vector2(52, 84)
+position = Vector2(68, 68)
 
 [node name="Box_3" parent="." instance=ExtResource("8_i64id")]
-position = Vector2(68, 84)
+position = Vector2(68, 52)

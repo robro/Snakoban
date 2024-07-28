@@ -1,26 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://c04e8mqe0vw1u"]
+[gd_scene load_steps=3 format=3 uid="uid://c04e8mqe0vw1u"]
 
 [ext_resource type="SpriteFrames" uid="uid://j2yaohl3pxlx" path="res://object/snake/snake_frames.tres" id="1_ebxpe"]
 [ext_resource type="Script" path="res://object/snake/body_part.gd" id="1_jlty5"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_gtlxy"]
-size = Vector2(4, 4)
-
-[node name="BodyPart" type="Node2D" node_paths=PackedStringArray("sprite", "collision")]
+[node name="BodyPart" type="Node2D" node_paths=PackedStringArray("sprite")]
 process_physics_priority = -3
 z_index = 1
 texture_filter = 1
 script = ExtResource("1_jlty5")
 sprite = NodePath("Sprite")
-collision = NodePath("Collision")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_ebxpe")
 animation = &"bent"
-
-[node name="Collision" type="Area2D" parent="."]
-collision_layer = 2
-collision_mask = 20
-
-[node name="Shape" type="CollisionShape2D" parent="Collision"]
-shape = SubResource("RectangleShape2D_gtlxy")

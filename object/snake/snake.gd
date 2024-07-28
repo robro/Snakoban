@@ -73,22 +73,20 @@ func move(direction: Vector2i) -> bool:
 		return false
 	if head == null:
 		return false
-	if not head.move(head.grid_coord + direction, direction):
+	if not head.move(direction):
 		return false
 	head.update_animation()
 	Events.move.emit()
 	return true
 
 
-func append_body_part(coord: Vector2i) -> void:
+func append_body_part(coord: Vector2) -> void:
 	var new_part := body_part.instantiate()
 	add_child.call_deferred(new_part)
 	new_part.hurt.connect(_on_bodyPart_hurt)
 	new_part.grid_coord = coord
 
-	if parts.is_empty():
-		new_part.collision.area_entered.connect(_on_head_entered)
-	else:
+	if not parts.is_empty():
 		tail.next_part = new_part
 		new_part.prev_part = tail
 
