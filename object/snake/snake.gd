@@ -40,10 +40,7 @@ func _ready() -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	var event_action := event.as_text()
 	if not event.is_echo() and event_action in actions:
-		var last_action : String = ""
-		if not event_stack.is_empty():
-			last_action = event_stack[-1]
-
+		var last_action := "" if event_stack.is_empty() else event_stack[-1]
 		if event.is_action_pressed(event_action):
 			event_stack.append(event_action)
 
