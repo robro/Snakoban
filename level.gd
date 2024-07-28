@@ -27,6 +27,7 @@ func _ready() -> void:
 		grid.set_cell(coord, true)
 
 	var snake_coords := level_map.get_used_cells_by_id(Layer.SNAKE)
+	level_map.clear_layer(Layer.SNAKE)
 	snake = snake_scene.instantiate()
 	snake.died.connect(_on_snake_died)
 	add_child.call_deferred(snake)
@@ -43,11 +44,10 @@ func _ready() -> void:
 
 	win_state.state_entered.connect(_on_winState_entered)
 	lose_state.state_entered.connect(_on_loseState_entered)
-	level_map.clear_layer(Layer.SNAKE)
 
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("reset"):
+	if event.is_action_pressed("Reset"):
 		get_tree().reload_current_scene()
 
 

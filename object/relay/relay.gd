@@ -59,7 +59,7 @@ func update_beam() -> void:
 
 	var beam_size := 0
 	var direction := Vector2i(Vector2.from_angle(rotation))
-	var cell : Variant
+	var cell : Variant = null
 	while cell == null:
 		cell = grid.get_cell(grid_coord + direction * (beam_size + 1))
 		if cell:

@@ -3,6 +3,14 @@ extends Node2D
 
 @export var slow_tick := 0.4
 @export var fast_tick := 0.1
+
+const actions := {
+	"Up": Vector2i.UP,
+	"Down": Vector2i.DOWN,
+	"Left": Vector2i.LEFT,
+	"Right": Vector2i.RIGHT,
+}
+var event_stack : Array[String]
 var move_timer := Timer.new()
 var alive := true
 var grid : Grid = preload("res://object/grid.tres")
@@ -25,50 +33,38 @@ signal died
 
 func _ready() -> void:
 	move_timer.one_shot = true
+	move_timer.timeout.connect(_on_moveTimer_timeout)
 	add_child(move_timer)
 
 
-func _physics_process(_delta: float) -> void:
-	if Input.is_action_just_pressed("up", true):
-		move(Vector2.UP)
-		move_timer.start(slow_tick)
-		return
+func _unhandled_key_input(event: InputEvent) -> void:
+	var event_action := event.as_text()
+	if not event.is_echo() and event_action in actions:
+		var last_action : String = ""
+		if not event_stack.is_empty():
+			last_action = event_stack[-1]
 
-	if Input.is_action_just_pressed("down", true):
-		move(Vector2.DOWN)
-		move_timer.start(slow_tick)
-		return
+		if event.is_action_pressed(event_action):
+			event_stack.append(event_action)
 
-	if Input.is_action_just_pressed("left", true):
-		move(Vector2.LEFT)
-		move_timer.start(slow_tick)
-		return
+		elif event.is_action_released(event_action):
+			var action_idx := event_stack.find(event_action)
+			if action_idx >= 0:
+				event_stack.remove_at(action_idx)
 
-	if Input.is_action_just_pressed("right", true):
-		move(Vector2.RIGHT)
-		move_timer.start(slow_tick)
-		return
+		if not event_stack.is_empty() and last_action != event_stack[-1]:
+			move(actions[event_stack[-1]])
+			move_timer.start(slow_tick)
 
-	if move_timer.is_stopped():
-		if Input.is_action_pressed("up", true):
-			move(Vector2.UP)
 
-		elif Input.is_action_pressed("down", true):
-			move(Vector2.DOWN)
-
-		elif Input.is_action_pressed("left", true):
-			move(Vector2.LEFT)
-
-		elif Input.is_action_pressed("right", true):
-			move(Vector2.RIGHT)
-
+func _on_moveTimer_timeout() -> void:
+	if not event_stack.is_empty():
+		move(actions[event_stack[-1]])
 		move_timer.start(fast_tick)
 
 
 func move(direction: Vector2i) -> bool:
-	if not alive:
-		return false
-	if head == null:
+	if not alive or parts.is_empty():
 		return false
 	eat_food_at(head.grid_coord + direction)
 	if not head.move(direction):
