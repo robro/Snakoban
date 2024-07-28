@@ -15,5 +15,4 @@ hframes = 4
 vframes = 4
 
 [node name="Beam" parent="." instance=ExtResource("3_swsyo")]
-unique_name_in_owner = true
 position = Vector2(4, 0)

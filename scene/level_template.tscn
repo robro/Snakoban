@@ -61,7 +61,7 @@ unique_name_in_owner = true
 script = ExtResource("5_i0a0s")
 
 [node name="Laser_7" parent="." instance=ExtResource("7_bgxeh")]
-position = Vector2(36, 60)
+position = Vector2(36, 52)
 
 [node name="Food" parent="." instance=ExtResource("9_vdtn0")]
 position = Vector2(84, 84)
@@ -75,4 +75,4 @@ rotation = -3.1416
 
 [node name="Relay" parent="." instance=ExtResource("9_a2hux")]
 position = Vector2(84, 60)
-rotation = 1.5708
+rotation = 3.1416

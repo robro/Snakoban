@@ -4,12 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://cse4lmspeff8f" path="res://tile/sprites.png" id="2_xsr8x"]
 [ext_resource type="PackedScene" uid="uid://6ehx3rxmwyb6" path="res://object/laser/beam.tscn" id="3_2ooo8"]
 
-[node name="Relay" type="Node2D" node_paths=PackedStringArray("beam")]
+[node name="Relay" type="Node2D"]
 process_priority = -1
 modulate = Color(0.411765, 0.411765, 0.411765, 1)
 texture_filter = 1
 script = ExtResource("1_w680u")
-beam = NodePath("Beam")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_xsr8x")

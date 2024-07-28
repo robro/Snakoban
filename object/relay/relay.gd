@@ -3,9 +3,9 @@ extends GridObject
 
 @export var idle_color := Color.DIM_GRAY
 @export var powered_color := Color.PURPLE
-@export var beam : Beam
-var beaming : Variant
+var beam_collider : Variant
 var power_sources : Array[Laser]
+@onready var beam : Beam = $Beam
 
 
 func _ready() -> void:
@@ -13,6 +13,7 @@ func _ready() -> void:
 	pushable = true
 	modulate = idle_color
 	power_sources.clear()
+	update_beam()
 
 
 func power_on() -> void:
@@ -26,10 +27,13 @@ func power_off() -> void:
 
 
 func connect_to(_power_sources: Array[Laser]) -> void:
+	var connected := false
 	for laser in _power_sources:
 		if not laser in power_sources:
 			power_sources.append(laser)
-			power_on()
+			connected = true
+	if connected:
+		power_on()
 
 
 func disconnect_from(_power_sources: Array[Laser]) -> void:
@@ -39,16 +43,16 @@ func disconnect_from(_power_sources: Array[Laser]) -> void:
 		if laser_idx >= 0:
 			power_sources.remove_at(laser_idx)
 			disconnected = true
-	if beaming is Relay and disconnected:
-		beaming.disconnect_from(_power_sources)
-	elif beaming is Food:
-		beaming.edible = true
+	if beam_collider is Relay and disconnected:
+		beam_collider.disconnect_from(_power_sources)
+	elif beam_collider is Food:
+		beam_collider.edible = true
 	if power_sources.is_empty():
 		power_off()
 
 
 func update_beam() -> void:
-	beaming = null
+	beam_collider = null
 	if power_sources.is_empty():
 		beam.beam_texture.size.x = 0
 		return
@@ -67,5 +71,5 @@ func update_beam() -> void:
 		cell.hurt.emit()
 	elif cell is Relay:
 		cell.connect_to(power_sources)
-	beaming = cell
+	beam_collider = cell
 	beam.beam_texture.size.x = beam_size * grid.cell_size

@@ -39,6 +39,7 @@ anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_top = -4.0
+offset_right = 16.0
 offset_bottom = 4.0
 grow_vertical = 2
 texture = SubResource("ViewportTexture_f8rji")
@@ -54,7 +55,6 @@ texture = ExtResource("2_rcopx")
 centered = false
 hframes = 4
 vframes = 4
-frame = 1
 region_rect = Rect2(0, 0, 32, 32)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewport"]

@@ -10,9 +10,6 @@ var snake : Snake
 var food_count := 0
 var flash_timer := Timer.new()
 const snake_scene : PackedScene = preload("res://object/snake/snake.tscn")
-const tile_size := 8
-const win_flash_tick := 0.1
-const lose_flash_tick := 0.1
 const reset_wait_time := 1.0
 
 enum Layer {
@@ -66,33 +63,15 @@ func _on_food_eaten() -> void:
 
 
 func _on_loseState_entered() -> void:
-	flash_timer.wait_time = lose_flash_tick
-	flash_timer.autostart = true
-	flash_timer.timeout.connect(_on_loseFlash_timeout)
-	add_child(flash_timer)
-
-	snake.alive = false
-	snake.modulate = Color.PURPLE
 	await get_tree().create_timer(reset_wait_time).timeout
 	get_tree().reload_current_scene()
 
 
-func _on_loseFlash_timeout() -> void:
-	snake.visible = false if snake.visible else true
-
-
 func _on_winState_entered() -> void:
-	flash_timer.wait_time = win_flash_tick
-	flash_timer.autostart = true
-	flash_timer.timeout.connect(_on_winFlash_timeout)
-	add_child(flash_timer)
-
 	snake.alive = false
+	for part in snake.parts:
+		part.animation_player.play("win")
 	await get_tree().create_timer(reset_wait_time).timeout
 	Levels.curr_level_idx += 1
 	Levels.curr_level_idx %= Levels.level_paths.size()
 	get_tree().change_scene_to_file(Levels.level_paths[Levels.curr_level_idx])
-
-
-func _on_winFlash_timeout() -> void:
-	snake.modulate = Color.WHITE if snake.modulate == snake.color else snake.color

@@ -1,11 +1,9 @@
 class_name Snake
 extends Node2D
 
-const color : Color = Color.FOREST_GREEN
-const tile_size : int = 8
-const slow_tick := 0.4
-const fast_tick := 0.1
-var tick_timer := Timer.new()
+@export var slow_tick := 0.4
+@export var fast_tick := 0.1
+var move_timer := Timer.new()
 var alive := true
 var grid : Grid = preload("res://object/grid.tres")
 var body_part : PackedScene = preload("res://object/snake/body_part.tscn")
@@ -26,33 +24,32 @@ signal died
 
 
 func _ready() -> void:
-	modulate = color
-	tick_timer.one_shot = true
-	add_child(tick_timer)
+	move_timer.one_shot = true
+	add_child(move_timer)
 
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("up", true):
 		move(Vector2.UP)
-		tick_timer.start(slow_tick)
+		move_timer.start(slow_tick)
 		return
 
 	if Input.is_action_just_pressed("down", true):
 		move(Vector2.DOWN)
-		tick_timer.start(slow_tick)
+		move_timer.start(slow_tick)
 		return
 
 	if Input.is_action_just_pressed("left", true):
 		move(Vector2.LEFT)
-		tick_timer.start(slow_tick)
+		move_timer.start(slow_tick)
 		return
 
 	if Input.is_action_just_pressed("right", true):
 		move(Vector2.RIGHT)
-		tick_timer.start(slow_tick)
+		move_timer.start(slow_tick)
 		return
 
-	if tick_timer.is_stopped():
+	if move_timer.is_stopped():
 		if Input.is_action_pressed("up", true):
 			move(Vector2.UP)
 
@@ -65,7 +62,7 @@ func _physics_process(_delta: float) -> void:
 		elif Input.is_action_pressed("right", true):
 			move(Vector2.RIGHT)
 
-		tick_timer.start(fast_tick)
+		move_timer.start(fast_tick)
 
 
 func move(direction: Vector2i) -> bool:
@@ -77,7 +74,7 @@ func move(direction: Vector2i) -> bool:
 	if not head.move(direction):
 		return false
 	head.update_animation()
-	Events.move.emit()
+	grid.updated.emit()
 	return true
 
 
@@ -94,7 +91,6 @@ func eat_food_at(coord: Vector2i) -> void:
 
 func append_body_part(coord: Vector2) -> void:
 	var new_part := body_part.instantiate()
-	add_child.call_deferred(new_part)
 	new_part.hurt.connect(_on_bodyPart_hurt)
 	new_part.grid_coord = coord
 
@@ -103,7 +99,11 @@ func append_body_part(coord: Vector2) -> void:
 		new_part.prev_part = tail
 
 	parts.append(new_part)
+	add_child(new_part)
 
 
 func _on_bodyPart_hurt() -> void:
+	alive = false
 	died.emit()
+	for part in parts:
+		part.animation_player.play("dead")
