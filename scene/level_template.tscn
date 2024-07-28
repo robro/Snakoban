@@ -79,7 +79,7 @@ rotation = -1.5708
 position = Vector2(76, 76)
 
 [node name="Laser" parent="." instance=ExtResource("7_bgxeh")]
-position = Vector2(28, 36)
+position = Vector2(28, 44)
 
 [node name="Relay_5" parent="." instance=ExtResource("9_a2hux")]
 position = Vector2(76, 60)

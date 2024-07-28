@@ -9,6 +9,7 @@ func _ready() -> void:
 	super._ready()
 	pushable = true
 	grid.updated.connect(_on_grid_updated)
+	update_beam.call_deferred()
 
 
 func update_beam() -> void:

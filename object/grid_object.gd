@@ -22,4 +22,5 @@ func move(direction: Vector2i) -> bool:
 	grid.set_cell(grid_coord + direction, self)
 	grid.set_cell(grid_coord, null)
 	grid_coord += direction
+	grid.updated.emit()
 	return true
