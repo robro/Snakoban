@@ -23,7 +23,7 @@ func connect_to(_power_sources: Array[Laser]) -> void:
 	for power_source in _power_sources:
 		if not power_source in power_sources:
 			power_sources.append(power_source)
-	if source_count > power_sources.size():
+	if power_sources.size() > source_count:
 		update_beam()
 
 
@@ -35,7 +35,7 @@ func disconnect_from(_power_sources: Array[Laser]) -> void:
 		var source_idx := power_sources.find(power_source)
 		if source_idx >= 0:
 			power_sources.remove_at(source_idx)
-	if source_count < power_sources.size():
+	if power_sources.size() < source_count:
 		if beam_collider is Laser:
 			beam_collider.disconnect_from(_power_sources)
 		update_beam()
