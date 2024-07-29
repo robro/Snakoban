@@ -66,7 +66,6 @@ func move(direction: Vector2i) -> bool:
 	eat_food_at(head.grid_coord + direction)
 	if not head.move(direction):
 		return false
-	head.update_animation()
 	grid.updated.emit()
 	return true
 

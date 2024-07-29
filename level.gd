@@ -30,9 +30,9 @@ func _ready() -> void:
 	level_map.clear_layer(Layer.SNAKE)
 	snake = snake_scene.instantiate()
 	snake.died.connect(_on_snake_died)
-	add_child.call_deferred(snake)
 	for coord in snake_coords:
 		snake.append_body_part(coord)
+	add_child(snake)
 
 	assert(snake.parts.size() >= 2, "Invalid snake size: " + str(snake.parts.size()))
 
@@ -44,6 +44,7 @@ func _ready() -> void:
 
 	win_state.state_entered.connect(_on_winState_entered)
 	lose_state.state_entered.connect(_on_loseState_entered)
+	grid.updated.emit()
 
 
 func _input(event: InputEvent) -> void:

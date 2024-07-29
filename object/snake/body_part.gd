@@ -1,7 +1,6 @@
 class_name BodyPart
 extends GridObject
 
-@export var color := Color.FOREST_GREEN
 var prev_part : BodyPart
 var next_part : BodyPart
 var prev_coord : Vector2
@@ -13,14 +12,17 @@ signal hurt
 
 func _ready() -> void:
 	super._ready()
-	modulate = color
+	grid.updated.connect(_on_grid_updated)
+
+
+func _on_grid_updated() -> void:
 	update_animation()
 
 
 func move(direction: Vector2i) -> bool:
-	var to_cell : Variant = grid.get_cell(grid_coord + direction)
-	if to_cell is GridObject and to_cell.pushable:
-		to_cell.move(direction)
+	var cell : Variant = grid.get_cell(grid_coord + direction)
+	if cell is GridObject and cell.pushable:
+		cell.move(direction)
 	var curr_coord := grid_coord
 	if super.move(direction) == false:
 		return false
@@ -50,6 +52,3 @@ func update_animation() -> void:
 		sprite.animation = "bent"
 		if angle_difference(rotation, prev_part.rotation) > 0:
 			sprite.rotation = -PI / 2
-
-	if next_part and next_part.is_node_ready():
-		next_part.update_animation()

@@ -1,7 +1,6 @@
 class_name Relay
 extends GridObject
 
-@export var idle_color := Color.DIM_GRAY
 @export var powered_color := Color.PURPLE
 var beam_collider : Variant
 var power_sources : Array[Laser]
@@ -11,7 +10,6 @@ var power_sources : Array[Laser]
 func _ready() -> void:
 	super._ready()
 	pushable = true
-	modulate = idle_color
 	power_sources.clear()
 	update_beam()
 
@@ -22,7 +20,7 @@ func power_on() -> void:
 
 
 func power_off() -> void:
-	modulate = idle_color
+	modulate = color
 	update_beam()
 
 

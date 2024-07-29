@@ -1,7 +1,6 @@
 class_name Laser
 extends GridObject
 
-@export var color := Color.PURPLE
 var beam_collider : Variant
 @onready var beam : Beam = $Beam
 
@@ -9,9 +8,7 @@ var beam_collider : Variant
 func _ready() -> void:
 	super._ready()
 	pushable = true
-	modulate = color
 	grid.updated.connect(_on_grid_updated)
-	update_beam.call_deferred()
 
 
 func update_beam() -> void:

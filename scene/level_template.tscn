@@ -66,6 +66,27 @@ position = Vector2(36, 36)
 [node name="Food_2" parent="." instance=ExtResource("9_vdtn0")]
 position = Vector2(36, 108)
 
+[node name="Food_3" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(36, 92)
+
+[node name="Food_4" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(36, 76)
+
+[node name="Food_5" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(36, 60)
+
+[node name="Food_6" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(52, 60)
+
+[node name="Food_7" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(52, 76)
+
+[node name="Food_8" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(52, 92)
+
+[node name="Food_9" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(52, 108)
+
 [node name="Relay" parent="." instance=ExtResource("9_a2hux")]
 position = Vector2(108, 44)
 rotation = 3.1416

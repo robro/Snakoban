@@ -9,6 +9,7 @@ process_priority = -1
 modulate = Color(0.411765, 0.411765, 0.411765, 1)
 texture_filter = 1
 script = ExtResource("1_w680u")
+color = Color(0.411765, 0.411765, 0.411765, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_xsr8x")
