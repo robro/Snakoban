@@ -61,3 +61,12 @@ script = ExtResource("5_i0a0s")
 
 [node name="Food_2" parent="." instance=ExtResource("9_vdtn0")]
 position = Vector2(84, 60)
+
+[node name="Food_3" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(84, 76)
+
+[node name="Food_4" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(68, 76)
+
+[node name="Food_5" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(68, 60)
