@@ -8,7 +8,9 @@
 modulate = Color(0.627451, 0.12549, 0.941176, 1)
 texture_filter = 1
 script = ExtResource("1_dhy78")
-color = Color(0.627451, 0.12549, 0.941176, 1)
+powered_color = Color(0.627451, 0.12549, 0.941176, 1)
+self_powered = true
+color = Color(0.411765, 0.411765, 0.411765, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_x7ymj")

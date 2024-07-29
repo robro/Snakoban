@@ -12,6 +12,7 @@ var grid_coord : Vector2i :
 
 func _ready() -> void:
 	modulate = color
+	grid.updated.connect(_on_grid_updated)
 	grid_coord = (position / grid.cell_size).floor()
 	grid.set_cell(grid_coord, self)
 
@@ -23,3 +24,7 @@ func move(direction: Vector2i) -> bool:
 	grid.set_cell(grid_coord, null)
 	grid_coord += direction
 	return true
+
+
+func _on_grid_updated() -> void:
+	pass

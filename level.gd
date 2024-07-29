@@ -4,8 +4,8 @@ extends Node2D
 @onready var win_state : StateChartState = %Win
 @onready var lose_state : StateChartState = %Lose
 @onready var level_map : TileMap = %"Level Map"
-var grid : Grid = preload("res://object/grid.tres")
 
+var grid : Grid = preload("res://object/grid.tres")
 var snake : Snake
 var food_count := 0
 var flash_timer := Timer.new()

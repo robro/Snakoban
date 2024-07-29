@@ -10,11 +10,6 @@ var prev_coord : Vector2
 signal hurt
 
 
-func _ready() -> void:
-	super._ready()
-	grid.updated.connect(_on_grid_updated)
-
-
 func _on_grid_updated() -> void:
 	update_animation()
 
