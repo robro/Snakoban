@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://68i7icbm1err"]
 
-[ext_resource type="Script" path="res://object/relay/relay.gd" id="1_w680u"]
+[ext_resource type="Script" path="res://object/laser/laser.gd" id="1_7yctp"]
 [ext_resource type="Texture2D" uid="uid://cse4lmspeff8f" path="res://tile/sprites.png" id="2_xsr8x"]
 [ext_resource type="PackedScene" uid="uid://6ehx3rxmwyb6" path="res://object/laser/beam.tscn" id="3_2ooo8"]
 
@@ -8,7 +8,8 @@
 process_priority = -1
 modulate = Color(0.411765, 0.411765, 0.411765, 1)
 texture_filter = 1
-script = ExtResource("1_w680u")
+script = ExtResource("1_7yctp")
+powered_color = Color(0.627451, 0.12549, 0.941176, 1)
 color = Color(0.411765, 0.411765, 0.411765, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
