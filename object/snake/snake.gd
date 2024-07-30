@@ -13,6 +13,7 @@ const actions := {
 var event_stack : Array[String]
 var move_timer := Timer.new()
 var alive := true
+var controlable := true
 var grid : Grid = preload("res://object/grid.tres")
 var body_part : PackedScene = preload("res://object/snake/body_part.tscn")
 var parts : Array[BodyPart]
@@ -61,7 +62,7 @@ func _on_moveTimer_timeout() -> void:
 
 
 func move(direction: Vector2i) -> void:
-	if not alive or parts.is_empty():
+	if not controlable or parts.is_empty():
 		return
 	eat_food_at(head.grid_coord + direction)
 	if not head.move(direction):
@@ -76,6 +77,11 @@ func eat_food_at(coord: Vector2i) -> void:
 		grid.set_cell(coord, null)
 		if cell.edible:
 			append_body_part(tail.prev_coord)
+			for part in parts:
+				if not alive:
+					return
+				part.physical_anim.play("grow")
+				await get_tree().create_timer(0.05).timeout
 		else:
 			die()
 
@@ -95,9 +101,17 @@ func append_body_part(coord: Vector2) -> void:
 
 func die() -> void:
 	alive = false
+	controlable = false
 	died.emit()
 	for part in parts:
-		part.animation_player.play("dead")
+		part.color_anim.play("dead")
+		part.physical_anim.play("RESET")
+
+
+func win() -> void:
+	controlable = false
+	for part in parts:
+		part.color_anim.play("win")
 
 
 func _on_bodyPart_hurt() -> void:

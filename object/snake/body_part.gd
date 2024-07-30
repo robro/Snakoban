@@ -4,8 +4,9 @@ extends GridObject
 var prev_part : BodyPart
 var next_part : BodyPart
 var prev_coord : Vector2
-@onready var sprite : AnimatedSprite2D = %Sprite
-@onready var animation_player : AnimationPlayer = %AnimationPlayer
+@onready var sprite : AnimatedSprite2D = $Sprite
+@onready var color_anim : AnimationPlayer = $ColorAnimation
+@onready var physical_anim : AnimationPlayer = $PhysicalAnimation
 
 signal hurt
 

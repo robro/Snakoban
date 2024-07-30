@@ -69,9 +69,7 @@ func _on_loseState_entered() -> void:
 
 
 func _on_winState_entered() -> void:
-	snake.alive = false
-	for part in snake.parts:
-		part.animation_player.play("win")
+	snake.win()
 	await get_tree().create_timer(reset_wait_time).timeout
 	Levels.curr_level_idx += 1
 	Levels.curr_level_idx %= Levels.level_paths.size()

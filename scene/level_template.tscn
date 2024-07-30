@@ -66,13 +66,23 @@ script = ExtResource("5_i0a0s")
 [node name="Food" parent="." instance=ExtResource("9_vdtn0")]
 position = Vector2(52, 84)
 
+[node name="Food_2" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(36, 36)
+
+[node name="Food_3" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(36, 44)
+
+[node name="Food_4" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(36, 52)
+
+[node name="Food_5" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(36, 60)
+
 [node name="Switch" parent="." instance=ExtResource("10_ot48s")]
 position = Vector2(76, 92)
 
 [node name="Laser" parent="." instance=ExtResource("8_36q33")]
-modulate = Color(0.627451, 0.12549, 0.941176, 1)
-position = Vector2(52, 36)
-rotation = 1.5708
+position = Vector2(12, 68)
 
 [node name="Door" parent="." instance=ExtResource("10_gqsos")]
 position = Vector2(92, 60)
@@ -87,4 +97,4 @@ position = Vector2(100, 52)
 position = Vector2(100, 44)
 
 [node name="Relay" parent="." instance=ExtResource("9_mjxbs")]
-position = Vector2(44, 60)
+position = Vector2(52, 100)
