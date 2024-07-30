@@ -60,14 +60,13 @@ func _on_moveTimer_timeout() -> void:
 		move_timer.start(fast_tick)
 
 
-func move(direction: Vector2i) -> bool:
+func move(direction: Vector2i) -> void:
 	if not alive or parts.is_empty():
-		return false
+		return
 	eat_food_at(head.grid_coord + direction)
 	if not head.move(direction):
-		return false
+		return
 	grid.updated.emit()
-	return true
 
 
 func eat_food_at(coord: Vector2i) -> void:
@@ -78,7 +77,7 @@ func eat_food_at(coord: Vector2i) -> void:
 		if cell.edible:
 			append_body_part(tail.prev_coord)
 		else:
-			died.emit()
+			die()
 
 
 func append_body_part(coord: Vector2) -> void:
@@ -94,8 +93,12 @@ func append_body_part(coord: Vector2) -> void:
 	add_child(new_part)
 
 
-func _on_bodyPart_hurt() -> void:
+func die() -> void:
 	alive = false
 	died.emit()
 	for part in parts:
 		part.animation_player.play("dead")
+
+
+func _on_bodyPart_hurt() -> void:
+	die()

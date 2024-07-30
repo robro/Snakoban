@@ -4,7 +4,7 @@ extends GridObject
 @export var powered_color : Color
 @export var self_powered : bool
 var beam_collider : Variant
-var power_sources : Array[Laser]
+var connected_to : Dictionary
 @onready var beam : Beam = $Beam
 
 
@@ -12,42 +12,37 @@ func _ready() -> void:
 	super._ready()
 	pushable = true
 	if self_powered:
-		power_sources.append(self)
+		connected_to[self] = null
 	update_beam()
 
 
-func connect_to(_power_sources: Array[Laser]) -> void:
+func connect_to(objects: Dictionary) -> void:
 	if self_powered:
 		return
-	var source_count := power_sources.size()
-	for power_source in _power_sources:
-		if not power_source in power_sources:
-			power_sources.append(power_source)
-	if power_sources.size() > source_count:
+	var connect_count := connected_to.size()
+	for obj : Object in objects:
+		connected_to[obj] = null
+	if connected_to.size() > connect_count:
 		update_beam()
 
 
-func disconnect_from(_power_sources: Array[Laser]) -> void:
+func disconnect_from(objects: Dictionary) -> void:
 	if self_powered:
 		return
-	var source_count := power_sources.size()
-	for power_source in _power_sources:
-		var source_idx := power_sources.find(power_source)
-		if source_idx >= 0:
-			power_sources.remove_at(source_idx)
-	if power_sources.size() < source_count:
-		if beam_collider is Laser:
-			beam_collider.disconnect_from(_power_sources)
+	var connect_count := connected_to.size()
+	for obj : Object in objects:
+		connected_to.erase(obj)
+	if connected_to.size() < connect_count:
+		if beam_collider is Object and beam_collider.has_method("disconnect_from"):
+			beam_collider.disconnect_from(objects)
 		update_beam()
 
 
 func update_beam() -> void:
-	if beam_collider is Laser:
-		beam_collider.disconnect_from(power_sources)
-	elif beam_collider is Food:
-		beam_collider.edible = true
+	if beam_collider is Object and beam_collider.has_method("disconnect_from"):
+		beam_collider.disconnect_from(connected_to)
 	beam_collider = null
-	if power_sources.is_empty():
+	if connected_to.is_empty():
 		beam.beam_texture.size.x = 0
 		modulate = color
 		return
@@ -60,12 +55,8 @@ func update_beam() -> void:
 		if cell:
 			break
 		beam_size += 1
-	if cell is Food:
-		cell.edible = false
-	elif cell is BodyPart:
-		cell.hurt.emit()
-	elif cell is Laser:
-		cell.connect_to(power_sources)
+	if cell is Object and cell.has_method("connect_to"):
+		cell.connect_to(connected_to)
 	beam_collider = cell
 	beam.beam_texture.size.x = beam_size * grid.cell_size
 	modulate = powered_color

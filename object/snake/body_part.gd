@@ -19,6 +19,11 @@ func _on_grid_updated() -> void:
 	update_animation()
 
 
+func connect_to(objects: Dictionary) -> void:
+	if not objects.is_empty():
+		hurt.emit()
+
+
 func move(direction: Vector2i) -> bool:
 	var cell : Variant = grid.get_cell(grid_coord + direction)
 	if cell is GridObject and cell.pushable:
@@ -33,15 +38,13 @@ func move(direction: Vector2i) -> bool:
 
 
 func update_animation() -> void:
+	sprite.rotation = 0
 	if next_part:
 		rotation = next_part.position.angle_to_point(position)
 	elif prev_part:
 		rotation = position.angle_to_point(prev_part.position)
 	else:
 		rotation = 0
-
-	sprite.rotation = 0
-
 	if not prev_part:
 		sprite.animation = "head"
 	elif not next_part:
