@@ -24,7 +24,7 @@ func _init() -> void:
 func _ready() -> void:
 	var wall_coords := level_map.get_used_cells(Layer.WALLS)
 	for coord in wall_coords:
-		grid.set_cell(coord, true)
+		grid.set_cell(coord, 1)
 
 	var snake_coords := level_map.get_used_cells_by_id(Layer.SNAKE)
 	level_map.clear_layer(Layer.SNAKE)

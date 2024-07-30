@@ -79,10 +79,10 @@ position = Vector2(36, 52)
 position = Vector2(36, 60)
 
 [node name="Switch" parent="." instance=ExtResource("10_ot48s")]
-position = Vector2(76, 92)
+position = Vector2(76, 76)
 
 [node name="Laser" parent="." instance=ExtResource("8_36q33")]
-position = Vector2(12, 68)
+position = Vector2(60, 76)
 
 [node name="Door" parent="." instance=ExtResource("10_gqsos")]
 position = Vector2(92, 60)
@@ -97,4 +97,5 @@ position = Vector2(100, 52)
 position = Vector2(100, 44)
 
 [node name="Relay" parent="." instance=ExtResource("9_mjxbs")]
-position = Vector2(52, 100)
+position = Vector2(44, 76)
+rotation = 1.5708
