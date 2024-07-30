@@ -1,8 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bqlopparciepg"]
-
-[ext_resource type="Script" path="res://object/laser/laser.gd" id="1_dhy78"]
-[ext_resource type="Texture2D" uid="uid://bcu6i6tq8475h" path="res://object/laser/laser.png" id="2_x7ymj"]
-[ext_resource type="PackedScene" uid="uid://6ehx3rxmwyb6" path="res://object/laser/beam.tscn" id="3_swsyo"]
+[gd_resource type="AnimationLibrary" load_steps=4 format=3 uid="uid://djgutn6lgeger"]
 
 [sub_resource type="Animation" id="Animation_q3m1v"]
 resource_name = "idle"
@@ -49,29 +45,9 @@ tracks/0/keys = {
 "values": [Color(0.627451, 0.12549, 0.941176, 1)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_e4d7a"]
+[resource]
 _data = {
 "RESET": SubResource("Animation_nkt7c"),
 "idle": SubResource("Animation_q3m1v"),
 "powered": SubResource("Animation_2nddw")
 }
-
-[node name="Laser" type="Node2D"]
-modulate = Color(0.627451, 0.12549, 0.941176, 1)
-texture_filter = 1
-script = ExtResource("1_dhy78")
-self_powered = true
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_x7ymj")
-hframes = 4
-vframes = 4
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_e4d7a")
-}
-autoplay = "powered"
-
-[node name="Beam" parent="." instance=ExtResource("3_swsyo")]
-position = Vector2(4, 0)

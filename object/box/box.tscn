@@ -7,7 +7,6 @@
 modulate = Color(0.956863, 0.643137, 0.376471, 1)
 texture_filter = 1
 script = ExtResource("1_jfkh7")
-color = Color(0.956863, 0.643137, 0.376471, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_focnt")

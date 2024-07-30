@@ -1,7 +1,6 @@
 class_name GridObject
 extends Node2D
 
-@export var color : Color
 var pushable := false
 var grid : Grid = preload("res://object/grid.tres")
 var grid_coord : Vector2i :
@@ -11,7 +10,6 @@ var grid_coord : Vector2i :
 
 
 func _ready() -> void:
-	modulate = color
 	grid.updated.connect(_on_grid_updated)
 	grid_coord = (position / grid.cell_size).floor()
 	grid.set_cell(grid_coord, self)

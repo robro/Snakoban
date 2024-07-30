@@ -1,14 +1,23 @@
 class_name Food
 extends GridObject
 
-@export var inedible_color := Color.PURPLE
 var connected_to : Dictionary
 var edible := true :
 	set(value):
 		edible = value
-		modulate = color if edible else inedible_color
+		if edible:
+			animation_player.play("edible")
+		else:
+			animation_player.play("inedible")
+
+@onready var animation_player : AnimationPlayer = $AnimationPlayer
 
 signal eaten
+
+
+func _ready() -> void:
+	super._ready()
+	edible = true
 
 
 func connect_to(objects: Dictionary) -> void:

@@ -1,11 +1,11 @@
 class_name Laser
 extends GridObject
 
-@export var powered_color : Color
 @export var self_powered : bool
 var beam_collider : Variant
 var connected_to : Dictionary
 @onready var beam : Beam = $Beam
+@onready var animation_player : AnimationPlayer = $AnimationPlayer
 
 
 func _ready() -> void:
@@ -44,7 +44,7 @@ func update_beam() -> void:
 	beam_collider = null
 	if connected_to.is_empty():
 		beam.beam_texture.size.x = 0
-		modulate = color
+		animation_player.play("idle")
 		return
 
 	var beam_size := 0
@@ -59,7 +59,7 @@ func update_beam() -> void:
 		cell.connect_to(connected_to)
 	beam_collider = cell
 	beam.beam_texture.size.x = beam_size * grid.cell_size
-	modulate = powered_color
+	animation_player.play("powered")
 
 
 func _on_grid_updated() -> void:
