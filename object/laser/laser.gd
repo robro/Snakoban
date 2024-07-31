@@ -59,9 +59,10 @@ func update_beam() -> void:
 	animation_player.play("powered")
 
 	if not is_same(cell, beam_collider):
-		if beam_collider is Object and beam_collider.has_method("disconnect_from"):
-			beam_collider.disconnect_from(powered_by)
+		var prev_collider : Variant = beam_collider
 		beam_collider = cell
+		if prev_collider is Object and prev_collider.has_method("disconnect_from"):
+			prev_collider.disconnect_from(powered_by)
 		if beam_collider is Object and beam_collider.has_method("connect_to"):
 			beam_collider.connect_to(powered_by)
 

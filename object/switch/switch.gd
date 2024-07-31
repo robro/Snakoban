@@ -5,6 +5,8 @@ extends GridObject
 var powered_by : Dictionary
 var active := false :
 	set(value):
+		if active == value:
+			return
 		active = value
 		if active:
 			for door in powering:
