@@ -4,6 +4,21 @@
 [ext_resource type="Texture2D" uid="uid://bcu6i6tq8475h" path="res://object/laser/laser.png" id="2_x7ymj"]
 [ext_resource type="PackedScene" uid="uid://6ehx3rxmwyb6" path="res://object/laser/beam.tscn" id="3_swsyo"]
 
+[sub_resource type="Animation" id="Animation_nkt7c"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.627451, 0.12549, 0.941176, 1)]
+}
+
 [sub_resource type="Animation" id="Animation_q3m1v"]
 resource_name = "idle"
 tracks/0/type = "value"
@@ -21,21 +36,6 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_2nddw"]
 resource_name = "powered"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(0.627451, 0.12549, 0.941176, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_nkt7c"]
-length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true

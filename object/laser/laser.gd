@@ -41,6 +41,7 @@ func disconnect_from(objects: Dictionary) -> void:
 
 func update_beam() -> void:
 	if powered_by.is_empty():
+		beam_collider = null
 		beam.beam_texture.size.x = 0
 		animation_player.play("idle")
 		return
@@ -53,16 +54,17 @@ func update_beam() -> void:
 		if cell:
 			break
 		beam_size += 1
-	if not is_same(cell, beam_collider):
-		if beam_collider is Object and beam_collider.has_method("disconnect_from"):
-			beam_collider.disconnect_from(powered_by)
-	if cell is Object and cell.has_method("connect_to"):
-		cell.connect_to(powered_by)
-	beam_collider = cell
+
 	beam.beam_texture.size.x = beam_size * grid.cell_size
 	animation_player.play("powered")
 
+	if not is_same(cell, beam_collider):
+		if beam_collider is Object and beam_collider.has_method("disconnect_from"):
+			beam_collider.disconnect_from(powered_by)
+		beam_collider = cell
+		if beam_collider is Object and beam_collider.has_method("connect_to"):
+			beam_collider.connect_to(powered_by)
+
 
 func _on_grid_updated() -> void:
-	if self_powered:
 		update_beam()

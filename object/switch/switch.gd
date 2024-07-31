@@ -1,15 +1,18 @@
 class_name Switch
 extends GridObject
 
+@export var powering : Array[Door]
 var powered_by : Dictionary
 var active := false :
 	set(value):
 		active = value
 		if active:
-			Events.switch_on.emit()
+			for door in powering:
+				door.open()
 			animation_player.play("on")
 		else:
-			Events.switch_off.emit()
+			for door in powering:
+				door.close()
 			animation_player.play("off")
 
 @onready var animation_player : AnimationPlayer = $AnimationPlayer

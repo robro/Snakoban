@@ -20,7 +20,6 @@ func power_on() -> void:
 
 
 func power_off() -> void:
-	modulate = color
 	update_beam()
 
 
