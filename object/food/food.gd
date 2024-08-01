@@ -1,7 +1,7 @@
 class_name Food
 extends GridObject
 
-var connected_to : Dictionary
+var connected_to : Array[Laser]
 var edible := true :
 	set(value):
 		edible = value
@@ -20,18 +20,24 @@ func _ready() -> void:
 	edible = true
 
 
-func connect_to(objects: Dictionary) -> void:
-	for obj : Object in objects:
-		connected_to[obj] = null
-	if not connected_to.is_empty():
-		edible = false
+func connect_to(lasers: Array[Laser]) -> Array[Laser]:
+	var new_connections : Array[Laser] = []
+	for laser in lasers:
+		if not laser in connected_to:
+			connected_to.append(laser)
+			new_connections.append(laser)
+	edible = false
+	return new_connections
 
 
-func disconnect_from(objects: Dictionary) -> void:
-	for obj : Object in objects:
-		connected_to.erase(obj)
+func disconnect_from(lasers: Array[Laser]) -> Array[Laser]:
+	var new_disconnections : Array[Laser] = []
+	for laser in lasers:
+		if laser in connected_to:
+			connected_to.remove_at(connected_to.find(laser))
 	if connected_to.is_empty():
 		edible = true
+	return new_disconnections
 
 
 func eat() -> void:

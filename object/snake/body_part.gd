@@ -20,9 +20,10 @@ func _on_grid_updated() -> void:
 	update_animation()
 
 
-func connect_to(objects: Dictionary) -> void:
-	if not objects.is_empty():
+func connect_to(_power_sources: Array[Laser]) -> Array[Laser]:
+	if not _power_sources.is_empty():
 		hurt.emit()
+	return []
 
 
 func move(direction: Vector2i) -> bool:

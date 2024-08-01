@@ -2,7 +2,7 @@ class_name Switch
 extends GridObject
 
 @export var powering : Array[Door]
-var powered_by : Dictionary
+var powered_by : Array[Laser]
 var active := false :
 	set(value):
 		if active == value:
@@ -25,15 +25,22 @@ func _ready() -> void:
 	pushable = true
 
 
-func connect_to(objects: Dictionary) -> void:
-	for obj : Object in objects:
-		powered_by[obj] = null
-	if not active and not powered_by.is_empty():
+func connect_to(lasers: Array[Laser]) -> Array[Laser]:
+	var connections : Array[Laser] = []
+	for laser in lasers:
+		if not laser in powered_by:
+			powered_by.append(laser)
+			connections.append(laser)
+	if not active and powered_by.size() > 0:
 		active = true
+	return connections
 
 
-func disconnect_from(objects: Dictionary) -> void:
-	for obj : Object in objects:
-		powered_by.erase(obj)
+func disconnect_from(lasers: Array[Laser]) -> Array[Laser]:
+	var disconnections : Array[Laser] = []
+	for laser in lasers:
+		if laser in powered_by:
+			powered_by.remove_at(powered_by.find(laser))
 	if active and powered_by.is_empty():
 		active = false
+	return disconnections

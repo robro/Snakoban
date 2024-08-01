@@ -6,7 +6,9 @@ var grid : Grid = preload("res://object/grid.tres")
 var grid_coord : Vector2i :
 	set(new_coord):
 		grid_coord = new_coord
-		position = (grid_coord * grid.cell_size) + (Vector2i.ONE * grid.cell_size / 2)
+		position = (
+			grid_coord * grid.cell_size +
+			Vector2i.ONE * grid.cell_size / 2)
 
 
 func _ready() -> void:

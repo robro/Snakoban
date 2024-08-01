@@ -3,7 +3,8 @@ extends GridObject
 
 @export var self_powered : bool
 var beam_collider : Variant
-var powered_by : Dictionary
+var receiving : Array[Laser]
+var sending : Array[Laser]
 @onready var beam : Beam = $Beam
 @onready var animation_player : AnimationPlayer = $AnimationPlayer
 
@@ -12,35 +13,46 @@ func _ready() -> void:
 	super._ready()
 	pushable = true
 	if self_powered:
-		powered_by[self] = null
-	else:
-		update_beam()
+		receiving.append(self)
 
 
-func connect_to(objects: Dictionary) -> void:
+func connect_to(lasers: Array[Laser]) -> Array[Laser]:
 	if self_powered:
-		return
-	var powered_count := powered_by.size()
-	for obj : Object in objects:
-		powered_by[obj] = null
-	if powered_by.size() > powered_count:
+		return []
+	var connections : Array[Laser] = []
+	for laser in lasers:
+		if not laser in receiving:
+			receiving.append(laser)
+			connections.append(laser)
+	if connections:
+		if beam_collider is Object and beam_collider.has_method("connect_to"):
+			sending.append_array(beam_collider.connect_to(connections))
 		update_beam()
+	return connections
 
 
-func disconnect_from(objects: Dictionary) -> void:
+func disconnect_from(lasers: Array[Laser]) -> Array[Laser]:
 	if self_powered:
-		return
-	var connect_count := powered_by.size()
-	for obj : Object in objects:
-		powered_by.erase(obj)
-	if powered_by.size() < connect_count:
+		return []
+	var disconnections : Array[Laser] = []
+	for laser in lasers:
+		if laser in receiving:
+			receiving.remove_at(receiving.find(laser))
+			disconnections.append(laser)
+	if disconnections:
+		for laser in disconnections:
+			if not laser in sending:
+				disconnections.remove_at(disconnections.find(laser))
+			else:
+				sending.remove_at(sending.find(laser))
 		if beam_collider is Object and beam_collider.has_method("disconnect_from"):
-			beam_collider.disconnect_from(objects)
+			beam_collider.disconnect_from(disconnections)
 		update_beam()
+	return disconnections
 
 
 func update_beam() -> void:
-	if powered_by.is_empty():
+	if receiving.is_empty():
 		beam_collider = null
 		beam.beam_texture.size.x = 0
 		animation_player.play("idle")
@@ -62,9 +74,10 @@ func update_beam() -> void:
 		var prev_collider : Variant = beam_collider
 		beam_collider = cell
 		if prev_collider is Object and prev_collider.has_method("disconnect_from"):
-			prev_collider.disconnect_from(powered_by)
+			prev_collider.disconnect_from(sending)
+			sending.clear()
 		if beam_collider is Object and beam_collider.has_method("connect_to"):
-			beam_collider.connect_to(powered_by)
+			sending.append_array(beam_collider.connect_to(receiving))
 
 
 func _on_grid_updated() -> void:
