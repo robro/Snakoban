@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bgapuybf6it5w"]
+[gd_scene load_steps=10 format=3 uid="uid://bgapuybf6it5w"]
 
 [ext_resource type="Script" path="res://level.gd" id="1_xil76"]
 [ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="2_2nbgp"]
@@ -8,8 +8,6 @@
 [ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_dwxd1"]
 [ext_resource type="PackedScene" uid="uid://bqlopparciepg" path="res://object/laser/laser.tscn" id="8_36q33"]
 [ext_resource type="PackedScene" uid="uid://dkh7x0qdxslah" path="res://object/food/food.tscn" id="9_vdtn0"]
-[ext_resource type="PackedScene" uid="uid://drdkghk37def3" path="res://object/door/door.tscn" id="10_gqsos"]
-[ext_resource type="PackedScene" path="res://object/switch/switch.tscn" id="10_ot48s"]
 [ext_resource type="PackedScene" uid="uid://68i7icbm1err" path="res://object/relay/relay.tscn" id="12_k6kkc"]
 
 [node name="Level" type="Node2D"]
@@ -63,41 +61,32 @@ script = ExtResource("5_i0a0s")
 unique_name_in_owner = true
 script = ExtResource("5_i0a0s")
 
-[node name="Food" parent="." instance=ExtResource("9_vdtn0")]
-position = Vector2(12, 116)
-
 [node name="Laser" parent="." instance=ExtResource("8_36q33")]
-position = Vector2(36, 68)
+position = Vector2(20, 68)
+
+[node name="Laser_3" parent="." instance=ExtResource("8_36q33")]
+position = Vector2(100, 68)
+rotation = 3.1416
 
 [node name="Laser_2" parent="." instance=ExtResource("8_36q33")]
-position = Vector2(84, 68)
+position = Vector2(52, 20)
+rotation = 1.5708
+
+[node name="Relay" parent="." instance=ExtResource("12_k6kkc")]
+position = Vector2(52, 84)
+rotation = -1.5708
+
+[node name="Relay_2" parent="." instance=ExtResource("12_k6kkc")]
+position = Vector2(68, 84)
 rotation = 3.1416
 
 [node name="Relay_3" parent="." instance=ExtResource("12_k6kkc")]
-position = Vector2(52, 84)
-rotation = 4.7124
-
-[node name="Relay_6" parent="." instance=ExtResource("12_k6kkc")]
-position = Vector2(68, 84)
-rotation = 3.1416
+position = Vector2(68, 68)
+rotation = 1.5708
 
 [node name="Relay_4" parent="." instance=ExtResource("12_k6kkc")]
 position = Vector2(52, 68)
 rotation = 6.2832
 
-[node name="Relay_5" parent="." instance=ExtResource("12_k6kkc")]
-position = Vector2(68, 68)
-rotation = 7.854
-
-[node name="Switch" parent="." node_paths=PackedStringArray("powering") instance=ExtResource("10_ot48s")]
-position = Vector2(60, 100)
-powering = [NodePath("../Door"), NodePath("../Door_2"), NodePath("../Door_3")]
-
-[node name="Door" parent="." instance=ExtResource("10_gqsos")]
-position = Vector2(28, 28)
-
-[node name="Door_2" parent="." instance=ExtResource("10_gqsos")]
-position = Vector2(36, 28)
-
-[node name="Door_3" parent="." instance=ExtResource("10_gqsos")]
-position = Vector2(44, 28)
+[node name="Food" parent="." instance=ExtResource("9_vdtn0")]
+position = Vector2(52, 52)

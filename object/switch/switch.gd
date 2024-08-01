@@ -26,6 +26,8 @@ func _ready() -> void:
 
 
 func connect_to(lasers: Array[Laser]) -> Array[Laser]:
+	if lasers.is_empty():
+		return []
 	var connections : Array[Laser] = []
 	for laser in lasers:
 		if not laser in powered_by:
@@ -36,11 +38,10 @@ func connect_to(lasers: Array[Laser]) -> Array[Laser]:
 	return connections
 
 
-func disconnect_from(lasers: Array[Laser]) -> Array[Laser]:
-	var disconnections : Array[Laser] = []
+func disconnect_from(lasers: Array[Laser]) -> void:
+	if lasers.is_empty():
+		return
 	for laser in lasers:
-		if laser in powered_by:
-			powered_by.remove_at(powered_by.find(laser))
+		powered_by.erase(laser)
 	if active and powered_by.is_empty():
 		active = false
-	return disconnections
