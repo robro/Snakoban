@@ -68,14 +68,15 @@ func update_beam() -> void:
 	beam.beam_texture.size.x = beam_size * grid.cell_size
 	animation_player.play("powered")
 
-	if not is_same(cell, beam_collider):
-		var prev_collider : Variant = beam_collider
-		beam_collider = cell
-		if prev_collider is Object and prev_collider.has_method("disconnect_from"):
-			prev_collider.disconnect_from(power_outputs)
-			power_outputs.clear()
-		if beam_collider is Object and beam_collider.has_method("connect_to"):
-			power_outputs.append_array(beam_collider.connect_to(power_inputs))
+	if is_same(cell, beam_collider):
+		return
+	var prev_collider : Variant = beam_collider
+	beam_collider = cell
+	if prev_collider is Object and prev_collider.has_method("disconnect_from"):
+		prev_collider.disconnect_from(power_outputs)
+		power_outputs.clear()
+	if beam_collider is Object and beam_collider.has_method("connect_to"):
+		power_outputs.append_array(beam_collider.connect_to(power_inputs))
 
 
 func _on_grid_updated() -> void:

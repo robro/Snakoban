@@ -39,20 +39,23 @@ func _ready() -> void:
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_echo():
+		return
 	var event_action := event.as_text()
-	if not event.is_echo() and event_action in actions:
-		var last_action := "" if event_stack.is_empty() else event_stack[-1]
-		if event.is_action_pressed(event_action):
-			event_stack.append(event_action)
+	if not event_action in actions:
+		return
+	var last_action := "" if event_stack.is_empty() else event_stack[-1]
+	if event.is_action_pressed(event_action):
+		event_stack.append(event_action)
 
-		elif event.is_action_released(event_action):
-			var action_idx := event_stack.find(event_action)
-			if action_idx >= 0:
-				event_stack.remove_at(action_idx)
+	elif event.is_action_released(event_action):
+		var action_idx := event_stack.find(event_action)
+		if action_idx >= 0:
+			event_stack.remove_at(action_idx)
 
-		if not event_stack.is_empty() and last_action != event_stack[-1]:
-			move(actions[event_stack[-1]])
-			move_timer.start(slow_tick)
+	if not event_stack.is_empty() and last_action != event_stack[-1]:
+		move(actions[event_stack[-1]])
+		move_timer.start(slow_tick)
 
 
 func _on_moveTimer_timeout() -> void:
