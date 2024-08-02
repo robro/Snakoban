@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b2d8u8b62esm0"]
+[gd_scene load_steps=7 format=3 uid="uid://dke6ahqa4mdje"]
 
 [ext_resource type="Script" path="res://object/switch/switch.gd" id="1_auink"]
 [ext_resource type="Texture2D" uid="uid://cse4lmspeff8f" path="res://tile/sprites.png" id="2_hgsnk"]
@@ -15,7 +15,19 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(0.411765, 0.411765, 0.411765, 1)]
+"values": [Color(0.148639, 0.336733, 0.65717, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
 }
 
 [sub_resource type="Animation" id="Animation_d5hi2"]
@@ -30,7 +42,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(0.411765, 0.411765, 0.411765, 1)]
+"values": [Color(0.148639, 0.336733, 0.65717, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -57,7 +69,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 0.55, 0, 1)]
+"values": [Color(0.956863, 0.643137, 0.376471, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -84,7 +96,7 @@ texture_filter = 1
 script = ExtResource("1_auink")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0.411765, 0.411765, 0.411765, 1)
+modulate = Color(0.148639, 0.336733, 0.65717, 1)
 texture = ExtResource("2_hgsnk")
 hframes = 4
 vframes = 4

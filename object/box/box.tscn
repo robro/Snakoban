@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ckwk83kyrjqh0"]
 
 [ext_resource type="Script" path="res://object/box/box.gd" id="1_jfkh7"]
-[ext_resource type="Texture2D" uid="uid://d4hwr0ibnihjr" path="res://object/box/box.png" id="2_focnt"]
+[ext_resource type="Texture2D" uid="uid://cse4lmspeff8f" path="res://tile/sprites.png" id="2_qtlr7"]
 
 [node name="Box" type="Node2D"]
 modulate = Color(0.956863, 0.643137, 0.376471, 1)
@@ -9,6 +9,7 @@ texture_filter = 1
 script = ExtResource("1_jfkh7")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_focnt")
+texture = ExtResource("2_qtlr7")
 hframes = 4
 vframes = 4
+frame = 1

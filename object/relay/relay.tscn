@@ -7,7 +7,7 @@
 
 [node name="Relay" type="Node2D"]
 process_priority = -1
-modulate = Color(0.411765, 0.411765, 0.411765, 1)
+modulate = Color(0.148639, 0.336733, 0.65717, 1)
 texture_filter = 1
 script = ExtResource("1_7yctp")
 

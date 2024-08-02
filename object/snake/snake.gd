@@ -72,18 +72,20 @@ func move(direction: Vector2i) -> void:
 
 func eat_food_at(coord: Vector2i) -> void:
 	var cell : Variant = grid.get_cell(coord)
-	if cell is Food:
-		cell.eat()
-		grid.set_cell(coord, null)
-		if cell.edible:
-			append_body_part(tail.prev_coord)
-			for part in parts:
-				if not alive:
-					return
-				part.physical_anim.play("grow")
-				await get_tree().create_timer(0.05).timeout
-		else:
-			die()
+	if not cell is Food:
+		return
+	cell.eat()
+	grid.set_cell(coord, null)
+	if not cell.edible:
+		die()
+		return
+	append_body_part(tail.prev_coord)
+	for part in parts:
+		if not alive:
+			return
+		part.physical_anim.play("grow")
+		if is_inside_tree():
+			await get_tree().create_timer(0.05).timeout
 
 
 func append_body_part(coord: Vector2) -> void:

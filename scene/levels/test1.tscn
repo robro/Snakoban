@@ -1,23 +1,23 @@
-[gd_scene load_steps=11 format=3 uid="uid://bgapuybf6it5w"]
+[gd_scene load_steps=11 format=3 uid="uid://bfwvpi72w3jnd"]
 
-[ext_resource type="Script" path="res://level.gd" id="1_xil76"]
-[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="2_2nbgp"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="3_ystfo"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_4inxj"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_i0a0s"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_dwxd1"]
-[ext_resource type="PackedScene" uid="uid://bqlopparciepg" path="res://object/laser/laser.tscn" id="8_36q33"]
-[ext_resource type="PackedScene" uid="uid://dkh7x0qdxslah" path="res://object/food/food.tscn" id="9_vdtn0"]
-[ext_resource type="PackedScene" uid="uid://drdkghk37def3" path="res://object/door/door.tscn" id="10_gqsos"]
-[ext_resource type="PackedScene" uid="uid://dke6ahqa4mdje" path="res://object/switch/switch.tscn" id="10_ot48s"]
+[ext_resource type="Script" path="res://level.gd" id="1_fn25n"]
+[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="2_0dqgt"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="3_sxeec"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_8nww1"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_7lcly"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_pd1jg"]
+[ext_resource type="PackedScene" uid="uid://bqlopparciepg" path="res://object/laser/laser.tscn" id="7_508ru"]
+[ext_resource type="PackedScene" uid="uid://dkh7x0qdxslah" path="res://object/food/food.tscn" id="8_hre11"]
+[ext_resource type="PackedScene" uid="uid://dke6ahqa4mdje" path="res://object/switch/switch.tscn" id="9_kp2n2"]
+[ext_resource type="PackedScene" uid="uid://drdkghk37def3" path="res://object/door/door.tscn" id="10_ffish"]
 
 [node name="Level" type="Node2D"]
 texture_filter = 1
-script = ExtResource("1_xil76")
+script = ExtResource("1_fn25n")
 
 [node name="Level Map" type="TileMap" parent="."]
 unique_name_in_owner = true
-tile_set = ExtResource("2_2nbgp")
+tile_set = ExtResource("2_0dqgt")
 format = 2
 layer_0/name = "Snake"
 layer_0/tile_data = PackedInt32Array(262150, 131072, 0, 262149, 131072, 1, 262148, 0, 1, 262147, 131072, 1, 262146, 131072, 2, 327682, 196608, 1, 393218, 65536, 3)
@@ -33,68 +33,68 @@ metadata/_edit_lock_ = true
 
 [node name="Level State" type="Node" parent="."]
 unique_name_in_owner = true
-script = ExtResource("3_ystfo")
+script = ExtResource("3_sxeec")
 
 [node name="Root" type="Node" parent="Level State"]
-script = ExtResource("4_4inxj")
+script = ExtResource("4_8nww1")
 initial_state = NodePath("Gameplay")
 
 [node name="Gameplay" type="Node" parent="Level State/Root"]
-script = ExtResource("5_i0a0s")
+script = ExtResource("5_7lcly")
 
 [node name="toWin" type="Node" parent="Level State/Root/Gameplay"]
-script = ExtResource("6_dwxd1")
+script = ExtResource("6_pd1jg")
 to = NodePath("../../Win")
 event = &"won"
 delay_in_seconds = "0.0"
 
 [node name="toLose" type="Node" parent="Level State/Root/Gameplay"]
-script = ExtResource("6_dwxd1")
+script = ExtResource("6_pd1jg")
 to = NodePath("../../Lose")
 event = &"lost"
 delay_in_seconds = "0.0"
 
 [node name="Win" type="Node" parent="Level State/Root"]
 unique_name_in_owner = true
-script = ExtResource("5_i0a0s")
+script = ExtResource("5_7lcly")
 
 [node name="Lose" type="Node" parent="Level State/Root"]
 unique_name_in_owner = true
-script = ExtResource("5_i0a0s")
+script = ExtResource("5_7lcly")
 
-[node name="Laser" parent="." instance=ExtResource("8_36q33")]
+[node name="Laser" parent="." instance=ExtResource("7_508ru")]
 position = Vector2(60, 44)
 
-[node name="Food" parent="." instance=ExtResource("9_vdtn0")]
+[node name="Food" parent="." instance=ExtResource("8_hre11")]
 position = Vector2(100, 76)
 
-[node name="Food_10" parent="." instance=ExtResource("9_vdtn0")]
+[node name="Food_10" parent="." instance=ExtResource("8_hre11")]
 position = Vector2(36, 68)
 
-[node name="Food_15" parent="." instance=ExtResource("9_vdtn0")]
+[node name="Food_15" parent="." instance=ExtResource("8_hre11")]
 position = Vector2(36, 92)
 
-[node name="Switch_8" parent="." node_paths=PackedStringArray("powering") instance=ExtResource("10_ot48s")]
+[node name="Switch_8" parent="." node_paths=PackedStringArray("powering") instance=ExtResource("9_kp2n2")]
 position = Vector2(100, 28)
 powering = [NodePath("../Door")]
 
-[node name="Switch_9" parent="." node_paths=PackedStringArray("powering") instance=ExtResource("10_ot48s")]
+[node name="Switch_9" parent="." node_paths=PackedStringArray("powering") instance=ExtResource("9_kp2n2")]
 position = Vector2(76, 68)
 powering = [NodePath("../Door_2"), NodePath("../Door_3")]
 
-[node name="Switch_11" parent="." node_paths=PackedStringArray("powering") instance=ExtResource("10_ot48s")]
+[node name="Switch_11" parent="." node_paths=PackedStringArray("powering") instance=ExtResource("9_kp2n2")]
 position = Vector2(76, 76)
 powering = [NodePath("../Door_2"), NodePath("../Door_3")]
 
-[node name="Switch_12" parent="." node_paths=PackedStringArray("powering") instance=ExtResource("10_ot48s")]
+[node name="Switch_12" parent="." node_paths=PackedStringArray("powering") instance=ExtResource("9_kp2n2")]
 position = Vector2(76, 84)
 powering = [NodePath("../Door_2"), NodePath("../Door_3")]
 
-[node name="Door" parent="." instance=ExtResource("10_gqsos")]
+[node name="Door" parent="." instance=ExtResource("10_ffish")]
 position = Vector2(100, 36)
 
-[node name="Door_2" parent="." instance=ExtResource("10_gqsos")]
+[node name="Door_2" parent="." instance=ExtResource("10_ffish")]
 position = Vector2(52, 92)
 
-[node name="Door_3" parent="." instance=ExtResource("10_gqsos")]
+[node name="Door_3" parent="." instance=ExtResource("10_ffish")]
 position = Vector2(52, 68)
