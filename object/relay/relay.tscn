@@ -15,7 +15,7 @@ script = ExtResource("1_7yctp")
 texture = ExtResource("2_xsr8x")
 hframes = 4
 vframes = 4
-frame = 4
+frame = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
