@@ -29,6 +29,10 @@ var tail : BodyPart :
 			return null
 		return parts[-1]
 
+var length : int :
+	get:
+		return parts.size()
+
 signal died
 
 

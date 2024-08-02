@@ -34,12 +34,11 @@ func _ready() -> void:
 		snake.append_body_part(coord)
 	add_child(snake)
 
-	assert(snake.parts.size() >= 2, "Invalid snake size: " + str(snake.parts.size()))
-
-	for food : Food in get_children().filter(func(n: Node) -> bool: return n is Food):
+	for food : Food in get_tree().get_nodes_in_group("food"):
 		food_count += 1
 		food.eaten.connect(_on_food_eaten)
 
+	assert(snake.length >= 2, "Invalid snake length: " + str(snake.length))
 	assert(food_count >= 1, "Level must have food!")
 
 	win_state.state_entered.connect(_on_winState_entered)
@@ -58,7 +57,7 @@ func _on_snake_died() -> void:
 
 func _on_food_eaten() -> void:
 	food_count -= 1
-	assert(food_count >= 0, "can't have negative food!")
+	assert(food_count >= 0, "Can't have negative food!")
 	if food_count == 0:
 		state_chart.send_event.call_deferred("won")
 

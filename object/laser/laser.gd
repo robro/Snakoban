@@ -38,11 +38,9 @@ func disconnect_from(lasers: Array[Laser]) -> void:
 	var lost_outputs : Array[Laser] = []
 	for laser in lasers:
 		if laser in power_inputs:
-			power_inputs.erase(laser)
-			lost_inputs.append(laser)
+			lost_inputs.append(power_inputs.pop_at(power_inputs.find(laser)))
 		if laser in power_outputs:
-			power_outputs.erase(laser)
-			lost_outputs.append(laser)
+			lost_outputs.append(power_outputs.pop_at(power_outputs.find(laser)))
 	if lost_inputs:
 		if beam_collider is Object and beam_collider.has_method("disconnect_from"):
 			beam_collider.disconnect_from(lost_outputs)
