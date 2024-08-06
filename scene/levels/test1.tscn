@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bfwvpi72w3jnd"]
+[gd_scene load_steps=14 format=3 uid="uid://bfwvpi72w3jnd"]
 
 [ext_resource type="Script" path="res://level.gd" id="1_fn25n"]
 [ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="2_0dqgt"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://drdkghk37def3" path="res://object/door/door.tscn" id="10_ffish"]
 [ext_resource type="PackedScene" uid="uid://ckwk83kyrjqh0" path="res://object/box/box.tscn" id="11_cnnnt"]
 [ext_resource type="PackedScene" uid="uid://68i7icbm1err" path="res://object/relay/relay.tscn" id="12_0r703"]
+[ext_resource type="PackedScene" uid="uid://d0vlh5oiqqbk8" path="res://scene/hud.tscn" id="13_lelgh"]
 
 [node name="Level" type="Node2D"]
 texture_filter = 1
@@ -117,3 +118,5 @@ script = ExtResource("5_7lcly")
 [node name="Lose" type="Node" parent="Level State/Root"]
 unique_name_in_owner = true
 script = ExtResource("5_7lcly")
+
+[node name="HUD" parent="." instance=ExtResource("13_lelgh")]

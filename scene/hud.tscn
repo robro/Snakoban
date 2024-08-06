@@ -1,0 +1,71 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0vlh5oiqqbk8"]
+
+[ext_resource type="FontFile" uid="uid://bmclneceuafuk" path="res://font/pansyhand.ttf" id="1_qrfmk"]
+[ext_resource type="Script" path="res://ui/level_display.gd" id="2_com2s"]
+[ext_resource type="Script" path="res://ui/moves_display.gd" id="3_uitjh"]
+[ext_resource type="Script" path="res://ui/pushes_display.gd" id="4_8ki4o"]
+
+[node name="HUD" type="HBoxContainer"]
+texture_filter = 1
+offset_left = 8.0
+offset_right = 120.0
+offset_bottom = 8.0
+alignment = 1
+
+[node name="Control_1" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Level" type="Label" parent="Control_1"]
+modulate = Color(0.956863, 0.643137, 0.376471, 1)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -6.5
+offset_right = 8.0
+offset_bottom = 6.5
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_qrfmk")
+theme_override_font_sizes/font_size = 16
+text = "69"
+script = ExtResource("2_com2s")
+
+[node name="Control_2" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Moves" type="Label" parent="Control_2"]
+modulate = Color(0.277477, 0.654105, 1, 1)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -7.0
+offset_right = 37.0
+offset_bottom = 7.0
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_qrfmk")
+theme_override_font_sizes/font_size = 16
+text = "moves: 69"
+script = ExtResource("3_uitjh")
+
+[node name="Control_3" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Pushes" type="Label" parent="Control_3"]
+modulate = Color(1, 0.0784314, 0.576471, 1)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -7.0
+offset_right = 39.0
+offset_bottom = 7.0
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_qrfmk")
+theme_override_font_sizes/font_size = 16
+text = "pushes: 69"
+script = ExtResource("4_8ki4o")

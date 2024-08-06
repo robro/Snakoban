@@ -43,7 +43,24 @@ func _ready() -> void:
 
 	win_state.state_entered.connect(_on_winState_entered)
 	lose_state.state_entered.connect(_on_loseState_entered)
+	Events.move.connect(_on_events_move)
+	Events.push.connect(_on_events_push)
+	Stats.moves = 0
+	Stats.pushes = 0
+	Events.move_count_updated.emit()
+	Events.push_count_updated.emit()
+	Events.level_num_updated.emit()
 	grid.updated.emit()
+
+
+func _on_events_move() -> void:
+	Stats.moves += 1
+	Events.move_count_updated.emit()
+
+
+func _on_events_push() -> void:
+	Stats.pushes += 1
+	Events.push_count_updated.emit()
 
 
 func _input(event: InputEvent) -> void:
@@ -72,4 +89,5 @@ func _on_winState_entered() -> void:
 	await get_tree().create_timer(reset_wait_time).timeout
 	Levels.curr_level_idx += 1
 	Levels.curr_level_idx %= Levels.level_paths.size()
+	Stats.level_num = Levels.curr_level_idx + 1
 	get_tree().change_scene_to_file(Levels.level_paths[Levels.curr_level_idx])

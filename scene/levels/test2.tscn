@@ -1,0 +1,70 @@
+[gd_scene load_steps=9 format=3 uid="uid://byr5a8kixrtwl"]
+
+[ext_resource type="Script" path="res://level.gd" id="1_61bhl"]
+[ext_resource type="PackedScene" uid="uid://dkh7x0qdxslah" path="res://object/food/food.tscn" id="3_hcd3o"]
+[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="8_ylayp"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="9_ttoug"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="10_jc30p"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="11_5q5ey"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="12_h7yk4"]
+[ext_resource type="PackedScene" uid="uid://d0vlh5oiqqbk8" path="res://scene/hud.tscn" id="13_0ftoe"]
+
+[node name="Level" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_61bhl")
+metadata/_edit_lock_ = true
+
+[node name="Sprites" type="Node" parent="."]
+
+[node name="Food" parent="Sprites" instance=ExtResource("3_hcd3o")]
+position = Vector2(100, 92)
+
+[node name="Level Map" type="TileMap" parent="."]
+unique_name_in_owner = true
+tile_set = ExtResource("8_ylayp")
+format = 2
+layer_0/name = "Snake"
+layer_0/tile_data = PackedInt32Array(393222, 131072, 0, 393221, 0, 1, 393220, 131072, 3)
+layer_1/name = "Walls"
+layer_1/tile_data = PackedInt32Array(1048592, 196610, 1, 983056, 65538, 0, 917520, 65538, 0, 851984, 65538, 0, 786448, 65538, 0, 720912, 65538, 0, 655376, 65538, 0, 589840, 65538, 0, 524304, 65538, 0, 458768, 65538, 0, 393232, 65538, 0, 327696, 65538, 0, 262160, 65538, 0, 196624, 65538, 0, 131088, 65538, 0, 65552, 65538, 0, 16, 65538, 0, -65520, 65538, 1, 1048591, 196610, 0, 983055, 65538, 3, 917519, 2, 0, 851983, 2, 0, 786447, 2, 0, 720911, 2, 0, 655375, 2, 0, 589839, 2, 0, 524303, 2, 0, 458767, 2, 0, -65521, 131074, 0, 1048590, 196610, 0, 983054, 131074, 0, -65522, 131074, 0, 1048589, 196610, 0, -65523, 131074, 0, 1048588, 196610, 0, -65524, 131074, 0, 1048587, 196610, 0, -65525, 131074, 0, 1048586, 196610, 0, -65526, 131074, 0, 1048585, 196610, 0, -65527, 131074, 0, 1048584, 196610, 0, -65528, 131074, 0, 1048583, 196610, 0, -65529, 131074, 0, 1048582, 196610, 0, -65530, 131074, 0, 1048581, 196610, 0, -65531, 131074, 0, 1048580, 196610, 0, -65532, 131074, 0, 1048579, 196610, 0, -65533, 131074, 0, 1048578, 196610, 0, -65534, 131074, 0, 1048577, 196610, 0, 1, 131074, 2, -65535, 131074, 0, 1048576, 196610, 0, 0, 131074, 2, -65536, 131074, 0, 1114111, 131074, 1, 1048575, 2, 0, 983039, 2, 0, 917503, 2, 0, 851967, 2, 0, 786431, 2, 0, 720895, 2, 0, 655359, 2, 0, 589823, 2, 0, 524287, 2, 0, 458751, 2, 0, 393215, 2, 0, 327679, 2, 0, 262143, 2, 0, 196607, 2, 0, 131071, 2, 0, 65535, 2, 0, -1, 2, 1, 983053, 131074, 0, 983052, 131074, 0, 983051, 131074, 0, 983050, 131074, 0, 983049, 131074, 0, 983048, 131074, 0, 983047, 131074, 0, 983046, 131074, 0, 983045, 131074, 0, 983044, 131074, 0, 983043, 131074, 0, 983042, 131074, 0, 983041, 131074, 0, 983040, 2, 3, 131072, 65538, 0, 196608, 65538, 0, 262144, 65538, 0, 327680, 65538, 0, 393216, 65538, 0, 458752, 65538, 0, 524288, 65538, 0, 589824, 65538, 0, 655360, 65538, 0, 720896, 65538, 0, 786432, 65538, 0, 851968, 65538, 0, 917504, 65538, 0, 65551, 65538, 2, 131087, 2, 0, 196623, 2, 0, 262159, 2, 0, 327695, 2, 0, 393231, 2, 0, 65538, 196610, 0, 65539, 196610, 0, 65540, 196610, 0, 65541, 196610, 0, 65542, 196610, 0, 65543, 196610, 0, 65544, 196610, 0, 65545, 196610, 0, 65546, 196610, 0, 65547, 196610, 0, 65548, 196610, 0, 65549, 196610, 0, 65550, 196610, 0, 3, 131074, 2, 2, 131074, 2, 65537, 196610, 0, 65536, 2, 2, 15, 131074, 2, 14, 131074, 2, 13, 131074, 2, 12, 131074, 2, 11, 131074, 2, 10, 131074, 2, 9, 131074, 2, 8, 131074, 2, 7, 131074, 2, 6, 131074, 2, 5, 131074, 2, 4, 131074, 2)
+metadata/_edit_lock_ = true
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -1
+offset_right = 128.0
+offset_bottom = 128.0
+color = Color(0, 0, 0, 1)
+metadata/_edit_lock_ = true
+
+[node name="Level State" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("9_ttoug")
+
+[node name="Root" type="Node" parent="Level State"]
+script = ExtResource("10_jc30p")
+initial_state = NodePath("Gameplay")
+
+[node name="Gameplay" type="Node" parent="Level State/Root"]
+script = ExtResource("11_5q5ey")
+
+[node name="toWin" type="Node" parent="Level State/Root/Gameplay"]
+script = ExtResource("12_h7yk4")
+to = NodePath("../../Win")
+event = &"won"
+delay_in_seconds = "0.0"
+
+[node name="toLose" type="Node" parent="Level State/Root/Gameplay"]
+script = ExtResource("12_h7yk4")
+to = NodePath("../../Lose")
+event = &"lost"
+delay_in_seconds = "0.0"
+
+[node name="Win" type="Node" parent="Level State/Root"]
+unique_name_in_owner = true
+script = ExtResource("11_5q5ey")
+
+[node name="Lose" type="Node" parent="Level State/Root"]
+unique_name_in_owner = true
+script = ExtResource("11_5q5ey")
+
+[node name="HUD" parent="." instance=ExtResource("13_0ftoe")]

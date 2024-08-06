@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 
 Levels="*res://global/levels.gd"
 Events="*res://global/events.gd"
+Stats="*res://global/stats.gd"
 
 [debug]
 
@@ -39,6 +40,14 @@ naming/node_name_num_separator=2
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot_state_charts/plugin.cfg")
+
+[importer_defaults]
+
+font_data_dynamic={
+"antialiasing": 0,
+"hinting": 0,
+"subpixel_positioning": 0
+}
 
 [input]
 

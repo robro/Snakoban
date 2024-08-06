@@ -75,6 +75,7 @@ func move(direction: Vector2i) -> void:
 	if not head.move(direction):
 		return
 	grid.updated.emit()
+	Events.move.emit()
 
 
 func eat_food_at(coord: Vector2i) -> void:
