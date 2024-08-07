@@ -82,12 +82,11 @@ func eat_food_at(coord: Vector2i) -> void:
 	var cell : Variant = grid.get_cell(coord)
 	if not cell is Food:
 		return
-	cell.eat()
-	grid.set_cell(coord, null)
 	if not cell.edible:
 		die()
-		return
+	grid.set_cell(coord, null)
 	append_body_part(tail.prev_coord)
+	cell.eat()
 	for part in parts:
 		if not alive:
 			return

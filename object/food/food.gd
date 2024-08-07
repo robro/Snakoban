@@ -18,7 +18,6 @@ signal eaten
 func _ready() -> void:
 	super._ready()
 	edible = true
-	add_to_group("food")
 
 
 func connect_to(lasers: Array[Laser]) -> Array[Laser]:

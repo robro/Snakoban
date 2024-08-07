@@ -1,32 +1,27 @@
-[gd_scene load_steps=10 format=3 uid="uid://byr5a8kixrtwl"]
+[gd_scene load_steps=9 format=3 uid="uid://8mhh3hp5ued6"]
 
-[ext_resource type="Script" path="res://level.gd" id="1_61bhl"]
-[ext_resource type="PackedScene" uid="uid://bqlopparciepg" path="res://object/laser/laser.tscn" id="2_11s01"]
-[ext_resource type="PackedScene" uid="uid://dkh7x0qdxslah" path="res://object/food/food.tscn" id="3_hcd3o"]
-[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="8_ylayp"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="9_ttoug"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="10_jc30p"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="11_5q5ey"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="12_h7yk4"]
-[ext_resource type="PackedScene" uid="uid://d0vlh5oiqqbk8" path="res://scene/hud.tscn" id="13_0ftoe"]
+[ext_resource type="Script" path="res://level.gd" id="1_78cml"]
+[ext_resource type="PackedScene" uid="uid://dkh7x0qdxslah" path="res://object/food/food.tscn" id="2_2luaw"]
+[ext_resource type="TileSet" uid="uid://rq5otf577nnm" path="res://tile/tileset.tres" id="3_lvc61"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="4_f081k"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="5_olirc"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="6_lk6sw"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="7_hrq0c"]
+[ext_resource type="PackedScene" uid="uid://d0vlh5oiqqbk8" path="res://scene/hud.tscn" id="8_18732"]
 
 [node name="Level" type="Node2D"]
 texture_filter = 1
-script = ExtResource("1_61bhl")
+script = ExtResource("1_78cml")
 metadata/_edit_lock_ = true
 
 [node name="Sprites" type="Node" parent="."]
 
-[node name="Food" parent="Sprites" instance=ExtResource("3_hcd3o")]
-position = Vector2(100, 92)
-
-[node name="Laser" parent="Sprites" instance=ExtResource("2_11s01")]
-position = Vector2(76, 20)
-rotation = 1.5708
+[node name="Food" parent="Sprites" instance=ExtResource("2_2luaw")]
+position = Vector2(32, 40)
 
 [node name="Level Map" type="TileMap" parent="."]
 unique_name_in_owner = true
-tile_set = ExtResource("8_ylayp")
+tile_set = ExtResource("3_lvc61")
 format = 2
 layer_0/name = "Snake"
 layer_0/tile_data = PackedInt32Array(393222, 131072, 0, 393221, 0, 1, 393220, 131072, 3)
@@ -43,33 +38,33 @@ metadata/_edit_lock_ = true
 
 [node name="Level State" type="Node" parent="."]
 unique_name_in_owner = true
-script = ExtResource("9_ttoug")
+script = ExtResource("4_f081k")
 
 [node name="Root" type="Node" parent="Level State"]
-script = ExtResource("10_jc30p")
+script = ExtResource("5_olirc")
 initial_state = NodePath("Gameplay")
 
 [node name="Gameplay" type="Node" parent="Level State/Root"]
-script = ExtResource("11_5q5ey")
+script = ExtResource("6_lk6sw")
 
 [node name="toWin" type="Node" parent="Level State/Root/Gameplay"]
-script = ExtResource("12_h7yk4")
+script = ExtResource("7_hrq0c")
 to = NodePath("../../Win")
 event = &"won"
 delay_in_seconds = "0.0"
 
 [node name="toLose" type="Node" parent="Level State/Root/Gameplay"]
-script = ExtResource("12_h7yk4")
+script = ExtResource("7_hrq0c")
 to = NodePath("../../Lose")
 event = &"lost"
 delay_in_seconds = "0.0"
 
 [node name="Win" type="Node" parent="Level State/Root"]
 unique_name_in_owner = true
-script = ExtResource("11_5q5ey")
+script = ExtResource("6_lk6sw")
 
 [node name="Lose" type="Node" parent="Level State/Root"]
 unique_name_in_owner = true
-script = ExtResource("11_5q5ey")
+script = ExtResource("6_lk6sw")
 
-[node name="HUD" parent="." instance=ExtResource("13_0ftoe")]
+[node name="HUD" parent="." instance=ExtResource("8_18732")]
